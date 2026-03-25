@@ -1,0 +1,218 @@
+// This is your Prisma schema file
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── ENUMS ──────────────────────────────────────────────────────────────────
+
+enum Role {
+  HACKER
+  JUDGE
+  ORGANIZER
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  WAITLISTED
+}
+
+enum RoundStatus {
+  DRAFT
+  OPEN
+  CLOSED
+}
+
+// ─── AUTH ───────────────────────────────────────────────────────────────────
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  passwordHash      String
+  role              Role      @default(HACKER)
+  emailVerified     Boolean   @default(false)
+  verificationToken String?   @unique
+  tokenExpiresAt    DateTime?
+  firstName         String?
+  lastName          String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  sessions         Session[]
+  application      Application?
+  teamMemberships  TeamMember[]
+  ledTeams         Team[]          @relation("TeamLead")
+  judgeAssignments JudgeAssignment[]
+  scores           Score[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── APPLICATION ─────────────────────────────────────────────────────────────
+
+model Application {
+  id           String            @id @default(cuid())
+  userId       String            @unique
+  school       String
+  grade        String
+  github       String?
+  experience   String            // beginner / intermediate / advanced
+  dietary      String?
+  tshirt       String
+  shortAnswer  String
+  status       ApplicationStatus @default(PENDING)
+  checkedIn    Boolean           @default(false)
+  checkedInAt  DateTime?
+  reviewNote   String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── TEAMS ───────────────────────────────────────────────────────────────────
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  joinCode  String   @unique @default(cuid())
+  leaderId  String
+  createdAt DateTime @default(now())
+
+  leader  User         @relation("TeamLead", fields: [leaderId], references: [id])
+  members TeamMember[]
+  project Project?
+}
+
+model TeamMember {
+  teamId    String
+  userId    String
+  joinedAt  DateTime @default(now())
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([teamId, userId])
+}
+
+// ─── PROJECTS ────────────────────────────────────────────────────────────────
+
+model Project {
+  id          String   @id @default(cuid())
+  teamId      String   @unique
+  name        String
+  description String
+  techStack   String
+  repoUrl     String?
+  demoUrl     String?
+  tableNumber Int?
+  submittedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  team             Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  judgeAssignments JudgeAssignment[]
+  awards           AwardWinner[]
+}
+
+// ─── JUDGING ─────────────────────────────────────────────────────────────────
+
+model JudgingRound {
+  id        String      @id @default(cuid())
+  name      String
+  status    RoundStatus @default(DRAFT)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  assignments JudgeAssignment[]
+}
+
+model JudgeAssignment {
+  id        String   @id @default(cuid())
+  roundId   String
+  judgeId   String
+  projectId String
+  createdAt DateTime @default(now())
+
+  round   JudgingRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  judge   User         @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  project Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  score   Score?
+
+  @@unique([roundId, judgeId, projectId])
+}
+
+model Score {
+  id             String   @id @default(cuid())
+  assignmentId   String   @unique
+  judgeId        String
+  innovation     Int      // 1–5
+  technicalDepth Int      // 1–5
+  designUX       Int      // 1–5
+  impact         Int      // 1–5
+  comments       String?
+  submittedAt    DateTime @default(now())
+
+  assignment JudgeAssignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  judge      User            @relation(fields: [judgeId], references: [id])
+}
+
+// ─── AWARDS ──────────────────────────────────────────────────────────────────
+
+model Award {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  prize       String?
+  createdAt   DateTime @default(now())
+
+  winners AwardWinner[]
+}
+
+model AwardWinner {
+  awardId   String
+  projectId String
+
+  award   Award   @relation(fields: [awardId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([awardId, projectId])
+}
+
+// ─── SCHEDULE ────────────────────────────────────────────────────────────────
+
+model ScheduleEvent {
+  id        String   @id @default(cuid())
+  title     String
+  location  String?
+  day       Int      @default(1) // 1 or 2
+  startTime String   // "09:00"
+  endTime   String?
+  tag       String?  // "LIVE", "WORKSHOP", "MEAL", etc.
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── EMAIL LOGS ──────────────────────────────────────────────────────────────
+
+model EmailLog {
+  id         String   @id @default(cuid())
+  subject    String
+  body       String
+  sentTo     String   // "ALL" | "ACCEPTED" | "WAITLISTED" | specific email
+  recipientCount Int  @default(0)
+  sentAt     DateTime @default(now())
+  sentById   String?
+}
