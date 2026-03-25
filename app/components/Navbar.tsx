@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
-const NAV_LINKS = ["about", "schedule", "faq"];
+const NAV_LINKS = ["about", "schedule", "faq", "contact"];
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
@@ -48,14 +48,14 @@ export default function Navbar() {
                     {/* Logo */}
                     <button onClick={() => scrollTo("hero")} className="group flex items-center gap-3">
                         <motion.span
-                            animate={{ opacity: [1, 0.4, 1] }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                            animate={{ opacity: [1, 0.4, 1], y: [0, -2, 0] }}
+                            transition={{ duration: 2.4, repeat: Infinity, ease: "linear" }}
                             className="text-[#39FF14] font-mono text-xs"
                         >
                             ⬡
                         </motion.span>
                         <motion.span
-                            whileHover={{ skewX: -4 }}
+                            whileHover={{ skewX: -4, x: 2 }}
                             className="text-xl font-black tracking-tighter text-[#39FF14] italic font-headline"
                         >
                             FRAMEWORK_2027
@@ -65,13 +65,13 @@ export default function Navbar() {
                     {/* Desktop nav */}
                     <div className="hidden md:flex gap-8 items-center">
                         {NAV_LINKS.map((item) => (
-                            <button
+                            <motion.button
                                 key={item}
                                 onClick={() => scrollTo(item)}
+                                whileHover={{ y: -2 }}
                                 className="relative font-mono text-xs tracking-[0.2em] uppercase text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer group"
                             >
                                 {item}
-                                {/* Animated underline */}
                                 <motion.span
                                     animate={{
                                         scaleX: activeSection === item ? 1 : 0,
@@ -86,7 +86,7 @@ export default function Navbar() {
                                     style={{ originX: 0 }}
                                     className="absolute -bottom-1 left-0 w-full h-[1px] bg-[#39FF14]/40"
                                 />
-                            </button>
+                            </motion.button>
                         ))}
 
                         <div className="w-px h-5 bg-[#39FF14]/20" />
@@ -104,10 +104,11 @@ export default function Navbar() {
                             <motion.div
                                 whileHover={{
                                     scale: 1.04,
+                                    y: -2,
                                     boxShadow: "0 0 30px rgba(57,255,20,0.5)",
                                 }}
                                 whileTap={{ scale: 0.96 }}
-                                className="bg-[#39FF14] text-[#053900] px-5 py-2 font-mono text-xs font-bold tracking-[0.2em] uppercase cursor-pointer"
+                                className="panel-sheen bg-[#39FF14] text-[#053900] px-5 py-2 font-mono text-xs font-bold tracking-[0.2em] uppercase cursor-pointer"
                             >
                                 APPLY →
                             </motion.div>
@@ -137,18 +138,19 @@ export default function Navbar() {
                         className="fixed top-[60px] left-0 w-full bg-[#0a0a0a]/98 backdrop-blur-xl z-40 border-t border-b border-[#39FF14]/10 flex flex-col items-start px-8 py-8 gap-5"
                     >
                         {NAV_LINKS.map((item) => (
-                            <button
+                            <motion.button
                                 key={item}
                                 onClick={() => scrollTo(item)}
+                                whileHover={{ x: 4 }}
                                 className="font-mono tracking-[0.25em] uppercase text-sm text-on-surface-variant hover:text-[#39FF14] transition-colors flex items-center gap-3 group"
                             >
                                 <span className="text-[#39FF14]/30 group-hover:text-[#39FF14] transition-colors">›</span>
                                 {item}
-                            </button>
+                            </motion.button>
                         ))}
                         <div className="w-16 h-px bg-[#39FF14]/20 my-1" />
                         <Link href="/auth/signup" onClick={() => setMenuOpen(false)}>
-                            <div className="bg-[#39FF14] text-[#053900] px-8 py-3 font-mono text-sm font-bold tracking-widest uppercase">
+                            <div className="panel-sheen bg-[#39FF14] text-[#053900] px-8 py-3 font-mono text-sm font-bold tracking-widest uppercase">
                                 APPLY_NOW →
                             </div>
                         </Link>

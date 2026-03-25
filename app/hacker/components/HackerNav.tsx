@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 const NAV = [
     { href: "/hacker", label: "DASHBOARD", icon: "⬡" },
     { href: "/hacker/apply", label: "APPLICATION", icon: "◈" },
-    { href: "/hacker/team", label: "TEAM", icon: "◉" },
     { href: "/hacker/project", label: "PROJECT", icon: "◫" },
     { href: "/hacker/profile", label: "PROFILE", icon: "◎" },
 ];

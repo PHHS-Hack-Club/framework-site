@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/app/lib/auth";
+import { getEventConfig } from "@/app/lib/event-config";
 import { prisma } from "@/app/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -14,16 +15,14 @@ export default async function HackerDashboard() {
     const user = await getCurrentUser();
     if (!user) redirect("/auth/login");
 
-    const [application, membership, totalAccepted] = await Promise.all([
+    const [application, membership, eventConfig] = await Promise.all([
         prisma.application.findUnique({ where: { userId: user.id } }),
         prisma.teamMember.findFirst({
             where: { userId: user.id },
             include: { team: { include: { members: { include: { user: true } }, project: true } } },
         }),
-        prisma.application.count({ where: { status: "ACCEPTED" } }),
+        getEventConfig(),
     ]);
-
-    const slotsLeft = 64 - totalAccepted;
 
     return (
         <div className="space-y-8">
@@ -38,11 +37,24 @@ export default async function HackerDashboard() {
             </div>
 
             {/* Stats row */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                 <div className="bg-surface-container-high p-6 border-t-2 border-[#39FF14]">
-                    <div className="font-mono text-xs text-on-surface-variant tracking-widest mb-2">SLOTS_REMAINING</div>
-                    <div className="text-4xl font-black text-[#39FF14] flicker">{slotsLeft}</div>
-                    <div className="font-mono text-xs text-on-surface-variant">/ 64 TOTAL</div>
+                    <div className="font-mono text-xs text-on-surface-variant tracking-widest mb-2">THEME</div>
+                    <div className="text-sm font-black text-[#39FF14] uppercase tracking-tight">
+                        {eventConfig.themeReleased ? "LIVE" : "DAY_OF_REVEAL"}
+                    </div>
+                    <div className="mt-2 font-mono text-xs text-on-surface-variant">
+                        {eventConfig.themeReleased ? eventConfig.themePrompt ?? "Theme released." : "Prompt stays hidden until organizers release it."}
+                    </div>
+                </div>
+                <div className="bg-surface-container-high p-6 border-t-2 border-outline-variant/30">
+                    <div className="font-mono text-xs text-on-surface-variant tracking-widest mb-2">PROJECT_FLOW</div>
+                    <div className="text-sm font-mono font-bold text-on-surface">
+                        {eventConfig.projectSubmissionsOpen ? "OPEN" : "LOCKED"}
+                    </div>
+                    <div className="font-mono text-xs text-on-surface-variant mt-1">
+                        Team creation happens inside project submission.
+                    </div>
                 </div>
                 <div className="bg-surface-container-high p-6 border-t-2 border-outline-variant/30">
                     <div className="font-mono text-xs text-on-surface-variant tracking-widest mb-2">APPLICATION</div>
@@ -73,7 +85,7 @@ export default async function HackerDashboard() {
                                 Submit Application
                             </h3>
                             <p className="font-mono text-xs text-on-surface-variant">
-                                {slotsLeft} slots remaining. Apply before they fill up.
+                                GitHub is required and prior coding experience is expected.
                             </p>
                             <div className="font-mono text-xs text-[#39FF14] mt-4 group-hover:translate-x-1 transition-transform">
                                 START_APPLICATION →
@@ -82,27 +94,24 @@ export default async function HackerDashboard() {
                     </Link>
                 )}
 
-                {application?.status === "ACCEPTED" && !membership && (
-                    <Link href="/hacker/team">
-                        <div className="bg-surface-container-high p-6 border border-outline-variant/20 hover:border-[#39FF14] transition-colors group cursor-pointer">
-                            <div className="font-mono text-xs text-on-surface-variant tracking-widest mb-2">NEXT_STEP</div>
-                            <h3 className="font-black text-xl uppercase italic tracking-tighter mb-2">Form Your Team</h3>
-                            <p className="font-mono text-xs text-on-surface-variant">Create or join a team of up to 4 hackers.</p>
-                            <div className="font-mono text-xs text-[#39FF14] mt-4 group-hover:translate-x-1 transition-transform">
-                                MANAGE_TEAM →
-                            </div>
-                        </div>
-                    </Link>
-                )}
-
-                {membership && !membership.team.project && (
+                {application?.status === "ACCEPTED" && (
                     <Link href="/hacker/project">
                         <div className="bg-surface-container-high p-6 border border-outline-variant/20 hover:border-[#39FF14] transition-colors group cursor-pointer">
                             <div className="font-mono text-xs text-on-surface-variant tracking-widest mb-2">NEXT_STEP</div>
-                            <h3 className="font-black text-xl uppercase italic tracking-tighter mb-2">Submit Project</h3>
-                            <p className="font-mono text-xs text-on-surface-variant">Add your project details before the deadline.</p>
+                            <h3 className="font-black text-xl uppercase italic tracking-tighter mb-2">
+                                {eventConfig.projectSubmissionsOpen ? "Open Project Flow" : "Wait For Day-Of Unlock"}
+                            </h3>
+                            <p className="font-mono text-xs text-on-surface-variant">
+                                {eventConfig.projectSubmissionsOpen
+                                    ? membership
+                                        ? membership.team.project
+                                            ? "Review or update your project submission."
+                                            : "Create or join a team inside the project page, then submit."
+                                        : "Create or join a team inside the project page."
+                                    : "Theme release, team creation, and project submission all open together when organizers unlock them."}
+                            </p>
                             <div className="font-mono text-xs text-[#39FF14] mt-4 group-hover:translate-x-1 transition-transform">
-                                SUBMIT_PROJECT →
+                                OPEN_PROJECT_FLOW →
                             </div>
                         </div>
                     </Link>

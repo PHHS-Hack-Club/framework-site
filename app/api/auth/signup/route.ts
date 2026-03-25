@@ -5,12 +5,14 @@ import {
     generateVerificationToken,
     sendVerificationEmail,
 } from "@/app/lib/auth";
+import { isAdminEmail, normalizeEmail } from "@/app/lib/site";
 
 export async function POST(req: NextRequest) {
     try {
         const { email, password, firstName, lastName } = await req.json();
+        const normalizedEmail = typeof email === "string" ? normalizeEmail(email) : "";
 
-        if (!email || !password) {
+        if (!normalizedEmail || !password) {
             return NextResponse.json(
                 { error: "Email and password are required." },
                 { status: 400 }
@@ -24,7 +26,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const existing = await prisma.user.findUnique({ where: { email } });
+        const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
         if (existing) {
             return NextResponse.json(
                 { error: "An account with this email already exists." },
@@ -38,17 +40,17 @@ export async function POST(req: NextRequest) {
 
         await prisma.user.create({
             data: {
-                email,
+                email: normalizedEmail,
                 passwordHash,
                 firstName,
                 lastName,
                 verificationToken,
                 tokenExpiresAt,
-                role: "HACKER",
+                role: isAdminEmail(normalizedEmail) ? "ORGANIZER" : "HACKER",
             },
         });
 
-        await sendVerificationEmail(email, verificationToken);
+        await sendVerificationEmail(normalizedEmail, verificationToken);
 
         return NextResponse.json({ ok: true });
     } catch (err) {

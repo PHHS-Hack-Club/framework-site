@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 72" fill="none">
+  <!-- Background -->
+  <rect width="400" height="72" fill="#0d0d0d"/>
+
+  <!-- ── Icon mark (56×56, centred vertically in 72px column) ── -->
+  <g transform="translate(8,8)">
+    <!-- Top-left bracket -->
+    <polyline points="17,5 5,5 5,17"  stroke="#39FF14" stroke-width="2.2" stroke-linecap="square" fill="none"/>
+    <!-- Top-right bracket -->
+    <polyline points="39,5 51,5 51,17" stroke="#39FF14" stroke-width="2.2" stroke-linecap="square" fill="none"/>
+    <!-- Bottom-left bracket -->
+    <polyline points="5,39 5,51 17,51"  stroke="#39FF14" stroke-width="2.2" stroke-linecap="square" fill="none"/>
+    <!-- Bottom-right bracket -->
+    <polyline points="51,39 51,51 39,51" stroke="#39FF14" stroke-width="2.2" stroke-linecap="square" fill="none"/>
+    <!-- Crosshair -->
+    <line x1="28" y1="21" x2="28" y2="25.5" stroke="#39FF14" stroke-width="1.4"/>
+    <line x1="28" y1="30.5" x2="28" y2="35" stroke="#39FF14" stroke-width="1.4"/>
+    <line x1="21" y1="28" x2="25.5" y2="28" stroke="#39FF14" stroke-width="1.4"/>
+    <line x1="30.5" y1="28" x2="35" y2="28" stroke="#39FF14" stroke-width="1.4"/>
+    <!-- Center dot -->
+    <circle cx="28" cy="28" r="2.5" fill="#39FF14"/>
+  </g>
+
+  <!-- Vertical divider -->
+  <rect x="74" y="14" width="1" height="44" fill="#39FF14" fill-opacity="0.25"/>
+
+  <!-- ── Wordmark ── -->
+  <!-- "FRAMEWORK" — white, bold monospace -->
+  <text
+    x="88" y="33"
+    font-family="'Courier New', 'Lucida Console', monospace"
+    font-weight="700"
+    font-size="19"
+    fill="#ffffff"
+    letter-spacing="3.5"
+    dominant-baseline="auto"
+  >FRAMEWORK</text>
+
+  <!-- Separator line under FRAMEWORK text -->
+  <rect x="88" y="39" width="200" height="1" fill="#39FF14" fill-opacity="0.35"/>
+
+  <!-- "2027" — neon green, mono -->
+  <text
+    x="89" y="56"
+    font-family="'Courier New', 'Lucida Console', monospace"
+    font-weight="400"
+    font-size="13"
+    fill="#39FF14"
+    letter-spacing="7"
+    dominant-baseline="auto"
+  >2027</text>
+</svg>

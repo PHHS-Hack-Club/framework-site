@@ -10,12 +10,8 @@ const specs = [
         text: "225 W Grand Ave, Montvale, NJ 07645",
     },
     {
-        icon: "wifi",
-        text: "GIGABIT_FIBER_ENABLED",
-    },
-    {
-        icon: "hardware",
-        text: "HARDWARE_LAB_ACCESS",
+        icon: "terminal",
+        text: "SOFTWARE_PROJECTS_ONLY",
     },
 ];
 
@@ -34,6 +30,7 @@ export default function LocationSection() {
                 variants={fadeUp}
                 initial="hidden"
                 animate={inView ? "show" : "hidden"}
+                whileHover={{ y: -8 }}
                 className="relative group"
             >
                 <div className="absolute -inset-4 border border-[#39FF14]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
@@ -123,9 +120,17 @@ export default function LocationSection() {
                     <span className="text-on-surface font-bold">
                         Pascack Hills High School
                     </span>{" "}
-                    in Montvale, NJ. The campus will be transformed into a high-density
-                    creative terminal for 24 continuous hours.
+                    in Montvale, NJ. The campus becomes a dense one-day software build floor,
+                    not an overnight sleepover and not a hardware lab.
                 </motion.p>
+                <motion.div
+                    variants={fadeUp}
+                    whileHover={{ y: -4, borderColor: "rgba(57,255,20,0.38)" }}
+                    className="mb-8 border border-[#39FF14]/15 bg-black/20 p-4 font-mono text-xs uppercase tracking-[0.2em] text-on-surface-variant"
+                >
+                    Bring a charged laptop, a working local environment, and anything you need cached
+                    ahead of time.
+                </motion.div>
 
                 <motion.div variants={stagger} className="space-y-4">
                     {specs.map((spec) => (
@@ -133,7 +138,7 @@ export default function LocationSection() {
                             key={spec.icon}
                             variants={fadeUp}
                             className="flex items-center gap-4 p-4 bg-surface border-l-2 border-outline-variant hover:border-[#39FF14] transition-colors group cursor-default"
-                            whileHover={{ x: 4 }}
+                            whileHover={{ x: 6, y: -2 }}
                         >
                             <span className="material-symbols-outlined text-[#39FF14]">
                                 {spec.icon}

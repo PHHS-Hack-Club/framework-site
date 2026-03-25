@@ -2,14 +2,14 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
-import { Resend } from "resend";
 import type { User } from "@prisma/client";
+import { sendEmail } from "./mail";
+import { isAdminEmail } from "./site";
 
 const JWT_SECRET = new TextEncoder().encode(
     process.env.JWT_SECRET ?? "dev-secret-change-in-production"
 );
 const SESSION_DURATION_DAYS = 30;
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 // ─── Password ──────────────────────────────────────────────────────────────
 
@@ -51,6 +51,12 @@ export async function getSessionUser(
         include: { user: true },
     });
     if (!session || session.expiresAt < new Date()) return null;
+    if (isAdminEmail(session.user.email) && session.user.role !== "ORGANIZER") {
+        return prisma.user.update({
+            where: { id: session.user.id },
+            data: { role: "ORGANIZER" },
+        });
+    }
     return session.user;
 }
 
@@ -97,8 +103,7 @@ export async function sendVerificationEmail(
 ): Promise<void> {
     const url = `${process.env.APP_URL}/api/auth/verify?token=${token}`;
 
-    await resend.emails.send({
-        from: process.env.RESEND_FROM ?? "Framework 2027 <noreply@resend.dev>",
+    await sendEmail({
         to: email,
         subject: "VERIFY_EMAIL :: FRAMEWORK 2027",
         html: `
@@ -134,8 +139,7 @@ export async function sendPasswordResetEmail(
     token: string
 ): Promise<void> {
     const url = `${process.env.APP_URL}/auth/reset-password?token=${token}`;
-    await resend.emails.send({
-        from: process.env.RESEND_FROM ?? "Framework 2027 <noreply@resend.dev>",
+    await sendEmail({
         to: email,
         subject: "PASSWORD_RESET :: FRAMEWORK 2027",
         html: `

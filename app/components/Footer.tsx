@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 const footerLinks = [
-    { label: "TERMINAL_ACCESS", href: "#" },
+    { label: "CONTACT", href: "#contact" },
     { label: "DATA_PRIVACY", href: "#" },
     { label: "SYSTEM_STATUS", href: "#" },
 ];
@@ -12,14 +12,14 @@ export default function Footer() {
     return (
         <footer className="w-full py-12 px-8 flex flex-col md:flex-row justify-between items-center gap-4 bg-[#0e0e0e] border-t border-[#39FF14]/5">
             {/* Left: brand */}
-            <div className="flex flex-col items-center md:items-start gap-2">
+            <motion.div whileHover={{ y: -2 }} className="flex flex-col items-center md:items-start gap-2">
                 <div className="text-lg font-bold text-[#39FF14] font-headline flicker">
                     FRAMEWORK_2027
                 </div>
                 <div className="text-[10px] tracking-widest uppercase font-mono text-on-surface-variant/50">
                     ©2027 FRAMEWORK HACKATHON. OPERATED BY LOCAL HIGH SCHOOL SYSTEMS.
                 </div>
-            </div>
+            </motion.div>
 
             {/* Right: status + links */}
             <div className="flex items-center gap-6 flex-wrap justify-center">
@@ -35,13 +35,14 @@ export default function Footer() {
                 </div>
                 <div className="flex gap-4">
                     {footerLinks.map((link) => (
-                        <a
+                        <motion.a
                             key={link.label}
                             href={link.href}
+                            whileHover={{ y: -2 }}
                             className="text-[10px] tracking-widest uppercase font-mono text-on-surface-variant/50 hover:text-[#39FF14] transition-colors"
                         >
                             {link.label}
-                        </a>
+                        </motion.a>
                     ))}
                 </div>
             </div>

@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
-import { getCurrentUser, hashPassword, generateVerificationToken } from "@/app/lib/auth";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { getCurrentUser, hashPassword } from "@/app/lib/auth";
+import { sendEmail } from "@/app/lib/mail";
 
 export async function GET() {
     const user = await getCurrentUser();
@@ -39,8 +37,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Email credentials
-    await resend.emails.send({
-        from: process.env.RESEND_FROM ?? "Framework 2027 <noreply@resend.dev>",
+    await sendEmail({
         to: email,
         subject: "JUDGE_ACCESS :: FRAMEWORK 2027",
         html: `<body style="background:#131313;color:#e5e2e1;font-family:monospace;padding:40px;"><div style="max-width:480px;border-left:4px solid #39FF14;padding-left:24px;"><h1 style="color:#39FF14;font-size:12px;letter-spacing:4px;">FRAMEWORK_2027</h1><h2>You've been added as a judge.</h2><p style="color:#baccb0;">Login at <a href="${process.env.APP_URL}/auth/login" style="color:#39FF14;">${process.env.APP_URL}/auth/login</a></p><p>Email: <strong>${email}</strong><br/>Temporary password: <strong style="color:#39FF14;">${tempPassword}</strong></p><p style="color:#3c4b35;font-size:11px;">Please change your password after logging in.</p></div></body>`,

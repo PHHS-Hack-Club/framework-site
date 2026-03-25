@@ -5,12 +5,14 @@ import {
     createSession,
     setSessionCookie,
 } from "@/app/lib/auth";
+import { isAdminEmail, normalizeEmail } from "@/app/lib/site";
 
 export async function POST(req: NextRequest) {
     try {
         const { email, password } = await req.json();
+        const normalizedEmail = typeof email === "string" ? normalizeEmail(email) : "";
 
-        const user = await prisma.user.findUnique({ where: { email } });
+        let user = await prisma.user.findUnique({ where: { email: normalizedEmail } });
         if (!user) {
             return NextResponse.json(
                 { error: "Invalid email or password." },
@@ -31,6 +33,13 @@ export async function POST(req: NextRequest) {
                 { error: "Please verify your email before logging in." },
                 { status: 403 }
             );
+        }
+
+        if (isAdminEmail(user.email) && user.role !== "ORGANIZER") {
+            user = await prisma.user.update({
+                where: { id: user.id },
+                data: { role: "ORGANIZER" },
+            });
         }
 
         const token = await createSession(user.id);

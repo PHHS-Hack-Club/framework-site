@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 const STEPS = ["PERSONAL", "EXPERIENCE", "LOGISTICS", "REVIEW"];
 
 const TSHIRT_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
-const EXPERIENCE_LEVELS = ["beginner", "intermediate", "advanced"];
+const EXPERIENCE_LEVELS = ["intermediate", "advanced"];
 const GRADES = ["9th", "10th", "11th", "12th"];
 
 type FormData = {
@@ -16,12 +15,11 @@ type FormData = {
 };
 
 const INITIAL: FormData = {
-    school: "", grade: "10th", github: "", experience: "beginner",
+    school: "", grade: "10th", github: "", experience: "intermediate",
     dietary: "", tshirt: "M", shortAnswer: "",
 };
 
 export default function ApplyPage() {
-    const router = useRouter();
     const [step, setStep] = useState(0);
     const [form, setForm] = useState<FormData>(INITIAL);
     const [loading, setLoading] = useState(false);
@@ -53,7 +51,7 @@ export default function ApplyPage() {
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-[#39FF14] text-8xl mb-6">✓</motion.div>
                 <h2 className="text-3xl font-black italic tracking-tighter uppercase mb-3">APPLICATION_SUBMITTED</h2>
-                <p className="font-mono text-sm text-on-surface-variant">We'll review your application and notify you via email.</p>
+                <p className="font-mono text-sm text-on-surface-variant">We&apos;ll review your application and notify you via email.</p>
             </div>
         );
     }
@@ -93,8 +91,11 @@ export default function ApplyPage() {
                                 </div>
                             </div>
                             <div>
-                                <label className={label}>GitHub Username (optional)</label>
-                                <input className={input} value={form.github} onChange={e => update("github", e.target.value)} placeholder="github.com/yourusername" />
+                                <label className={label}>GitHub Username</label>
+                                <input className={input} value={form.github} onChange={e => update("github", e.target.value)} placeholder="yourusername" />
+                                <div className="mt-2 font-mono text-[11px] text-on-surface-variant">
+                                    Required. We want a real handle we can check before event day.
+                                </div>
                             </div>
                         </>
                     )}
@@ -108,7 +109,7 @@ export default function ApplyPage() {
                                         <button key={l} onClick={() => update("experience", l)} className={`w-full text-left px-4 py-4 border font-mono text-sm transition-colors ${form.experience === l ? "border-[#39FF14] text-[#39FF14] bg-[#39FF14]/5" : "border-outline-variant/30 text-on-surface-variant hover:border-outline-variant"}`}>
                                             <span className="uppercase font-bold">{l}</span>
                                             <span className="block text-xs mt-1 opacity-60">
-                                                {l === "beginner" ? "New to coding or less than 1 year experience" : l === "intermediate" ? "1-3 years, completed some personal projects" : "3+ years, shipped production software"}
+                                                {l === "intermediate" ? "You can already build and debug your own projects." : "You have shipped substantial software and can move fast without hand-holding."}
                                             </span>
                                         </button>
                                     ))}
@@ -142,7 +143,7 @@ export default function ApplyPage() {
                     {step === 3 && (
                         <div className="space-y-4">
                             <div className="bg-surface-container-high p-6 border border-outline-variant/10 space-y-3">
-                                {Object.entries({ School: form.school, Grade: form.grade, GitHub: form.github || "—", Experience: form.experience, "T-Shirt": form.tshirt, Dietary: form.dietary || "None" }).map(([k, v]) => (
+                                {Object.entries({ School: form.school, Grade: form.grade, GitHub: form.github, Experience: form.experience, "T-Shirt": form.tshirt, Dietary: form.dietary || "None" }).map(([k, v]) => (
                                     <div key={k} className="flex justify-between font-mono text-sm">
                                         <span className="text-on-surface-variant">{k}</span>
                                         <span className="text-on-surface font-bold">{v}</span>
@@ -166,7 +167,12 @@ export default function ApplyPage() {
                     </button>
                 )}
                 {step < STEPS.length - 1 ? (
-                    <motion.button whileTap={{ scale: 0.98 }} onClick={() => setStep(p => p + 1)} className="flex-1 py-4 bg-surface-container-high border border-outline-variant/30 font-mono text-xs tracking-widest uppercase hover:border-[#39FF14] hover:text-[#39FF14] transition-colors">
+                    <motion.button
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setStep(p => p + 1)}
+                        disabled={step === 0 && (!form.school || !form.grade || !form.github)}
+                        className="flex-1 py-4 bg-surface-container-high border border-outline-variant/30 font-mono text-xs tracking-widest uppercase hover:border-[#39FF14] hover:text-[#39FF14] transition-colors disabled:opacity-50"
+                    >
                         NEXT →
                     </motion.button>
                 ) : (

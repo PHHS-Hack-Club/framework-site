@@ -22,12 +22,11 @@ const PROTECTED: ProtectedRoute[] = [
 
 const AUTH_ROUTES = ["/auth/login", "/auth/signup"];
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
     const { pathname } = req.nextUrl;
 
     const token = req.cookies.get(SESSION_COOKIE)?.value;
 
-    // Redirect logged-in users away from auth pages
     if (AUTH_ROUTES.some((r) => pathname.startsWith(r))) {
         if (token) {
             try {
@@ -49,7 +48,6 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next();
     }
 
-    // Protect portal routes
     const matched = PROTECTED.find((p) => pathname.startsWith(p.prefix));
     if (!matched) return NextResponse.next();
 
@@ -80,7 +78,6 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL(matched.redirect, req.url));
     }
 
-    // Attach user ID in header for server components
     const res = NextResponse.next();
     res.headers.set("x-user-id", session.user.id);
     res.headers.set("x-user-role", session.user.role);

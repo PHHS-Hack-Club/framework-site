@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/app/lib/auth";
 import { prisma } from "@/app/lib/prisma";
+import { getEventConfig } from "@/app/lib/event-config";
 
 async function getTeamId(userId: string): Promise<string | null> {
     const m = await prisma.teamMember.findFirst({ where: { userId } });
@@ -19,6 +20,10 @@ export async function GET() {
 export async function PUT(req: NextRequest) {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const config = await getEventConfig();
+    if (!config.projectSubmissionsOpen) {
+        return NextResponse.json({ error: "Project submissions are not open yet." }, { status: 403 });
+    }
     const teamId = await getTeamId(user.id);
     if (!teamId) return NextResponse.json({ error: "You must be in a team to submit a project." }, { status: 403 });
 

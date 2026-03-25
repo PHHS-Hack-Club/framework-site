@@ -1,8 +1,10 @@
 import { prisma } from "@/app/lib/prisma";
 import Link from "next/link";
+import { getEventConfig } from "@/app/lib/event-config";
+import EventControls from "./components/EventControls";
 
 export default async function OrganizerDashboard() {
-    const [total, accepted, pending, waitlisted, rejected, checkedIn, teams, projects, judges] = await Promise.all([
+    const [total, accepted, pending, waitlisted, rejected, checkedIn, teams, projects, judges, eventConfig] = await Promise.all([
         prisma.application.count(),
         prisma.application.count({ where: { status: "ACCEPTED" } }),
         prisma.application.count({ where: { status: "PENDING" } }),
@@ -12,7 +14,10 @@ export default async function OrganizerDashboard() {
         prisma.team.count(),
         prisma.project.count(),
         prisma.user.count({ where: { role: "JUDGE" } }),
+        getEventConfig(),
     ]);
+
+    const acceptedRate = total > 0 ? Math.round((accepted / total) * 100) : 0;
 
     const stats = [
         { label: "TOTAL_APPS", value: total, color: "border-on-surface-variant" },
@@ -38,13 +43,20 @@ export default async function OrganizerDashboard() {
             <div>
                 <h1 className="text-4xl font-black italic tracking-tighter uppercase mb-1">COMMAND_CENTER</h1>
                 <div className="font-mono text-xs text-on-surface-variant tracking-widest">
-                    {accepted} / 64 SLOTS FILLED — {Math.round((accepted / 64) * 100)}%
+                    {accepted} ACCEPTED // {pending} PENDING // {acceptedRate}% OF APPLICATIONS
                 </div>
-                {/* Slot bar */}
                 <div className="mt-3 h-1 bg-surface-container-high w-full max-w-md">
-                    <div className="h-1 bg-[#39FF14] glow-breathe transition-all" style={{ width: `${(accepted / 64) * 100}%` }} />
+                    <div className="h-1 bg-[#39FF14] glow-breathe transition-all" style={{ width: `${acceptedRate}%` }} />
                 </div>
             </div>
+
+            <EventControls
+                initialConfig={{
+                    themePrompt: eventConfig.themePrompt,
+                    themeReleased: eventConfig.themeReleased,
+                    projectSubmissionsOpen: eventConfig.projectSubmissionsOpen,
+                }}
+            />
 
             {/* Stats grid */}
             <div className="grid grid-cols-3 md:grid-cols-5 gap-4">

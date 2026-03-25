@@ -8,6 +8,7 @@ import AboutSection from "./components/AboutSection";
 import ScheduleSection from "./components/ScheduleSection";
 import FAQSection from "./components/FAQSection";
 import CTASection from "./components/CTASection";
+import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 
 // Global scanline overlay
@@ -25,6 +26,7 @@ export default function Home() {
         <ScheduleSection />
         <FAQSection />
         <CTASection />
+        <ContactSection />
       </main>
       <Footer />
     </>

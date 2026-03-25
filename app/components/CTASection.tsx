@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import Link from "next/link";
 import { fadeUpLarge as fadeUp, stagger } from "@/app/lib/animations";
 
 
@@ -18,7 +19,6 @@ export default function CTASection() {
                     "linear-gradient(to top, rgba(57,255,20,0.08) 0%, transparent 100%)",
             }}
         >
-            {/* Background grid */}
             <div
                 className="absolute inset-0 opacity-20"
                 style={{
@@ -26,8 +26,17 @@ export default function CTASection() {
                     backgroundSize: "32px 32px",
                 }}
             />
+            <motion.div
+                animate={{ scale: [0.92, 1.06, 0.92], opacity: [0.18, 0.35, 0.18] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(57,255,20,0.14),transparent_68%)] blur-3xl"
+            />
+            <motion.div
+                animate={{ rotate: [0, 8, 0], scale: [1, 1.04, 1] }}
+                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 border border-[#39FF14]/10"
+            />
 
-            {/* Scanlines */}
             <div className="absolute inset-0 scanline-overlay pointer-events-none" />
 
             <motion.div
@@ -48,22 +57,26 @@ export default function CTASection() {
                     variants={fadeUp}
                     className="font-mono text-on-surface-variant mb-12 max-w-xl mx-auto"
                 >
-                    Applications are currently open for all operational roles. Secure your
-                    slot before the buffer fills up.
+                    Applications are open for Bergen County students who can already ship code
+                    independently. Same-day, software-only, themed day-of, and best approached with
+                    your workflow cached locally.
                 </motion.p>
 
-                <motion.button
-                    variants={fadeUp}
-                    whileHover={{
-                        scale: 1.02,
-                        boxShadow: "0 0 60px rgba(57,255,20,0.6)",
-                    }}
-                    whileTap={{ scale: 0.97 }}
-                    className="bg-primary-container text-on-primary px-16 py-6 font-headline font-black text-2xl tracking-tighter shadow-[0_0_50px_rgba(57,255,20,0.5)] glow-breathe"
-                    id="cta-button"
-                >
-                    EXECUTE_APPLICATION
-                </motion.button>
+                <Link href="/auth/signup">
+                    <motion.div
+                        variants={fadeUp}
+                        whileHover={{
+                            scale: 1.03,
+                            y: -4,
+                            boxShadow: "0 0 60px rgba(57,255,20,0.6)",
+                        }}
+                        whileTap={{ scale: 0.97 }}
+                        className="cursor-pointer bg-primary-container px-16 py-6 font-headline text-2xl font-black tracking-tighter text-on-primary shadow-[0_0_50px_rgba(57,255,20,0.5)] glow-breathe"
+                        id="cta-button"
+                    >
+                        START_APPLICATION
+                    </motion.div>
+                </Link>
 
                 {/* Status blip */}
                 <motion.div
@@ -75,7 +88,7 @@ export default function CTASection() {
                         transition={{ duration: 1.5, repeat: Infinity }}
                         className="w-2 h-2 rounded-full bg-[#39FF14]"
                     />
-                    APPLICATIONS_OPEN // SLOTS_AVAILABLE: 128
+                    APPLICATIONS_OPEN // THEME_DAY_OF // SOFTWARE_ONLY
                 </motion.div>
             </motion.div>
         </section>

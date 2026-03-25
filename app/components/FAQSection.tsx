@@ -8,18 +8,23 @@ import { fadeUp, stagger } from "@/app/lib/animations";
 const faqs = [
     {
         id: "01",
-        q: "WHO_CAN_PARTICIPATE?",
-        a: "All high school students residing in or attending school within Bergen County are eligible. No prior coding experience is required—just the drive to learn.",
+        q: "WHO_IS_THIS_FOR?",
+        a: "High school students residing in or attending school within Bergen County are eligible, but this event assumes you already know how to code. It is not designed as an introduction to programming.",
     },
     {
         id: "02",
-        q: "WHAT_SHOULD_I_BRING?",
-        a: "Laptop, chargers, a sleeping bag, toiletries, and any specific hardware components you intend to use. We provide food, power, and high-speed connectivity.",
+        q: "WHEN_DO_WE_GET_THE_THEME?",
+        a: "Day-of. Organizers reveal the theme during the opening brief, then unlock the project flow for teams to form and start shipping against it.",
     },
     {
         id: "03",
-        q: "TEAM_LIMITS?",
-        a: "Squads of up to 4 operators are permitted. You can form teams prior to the event or find partners during the initialization phase.",
+        q: "HOW_DO_TEAMS_WORK?",
+        a: "Team creation and joining happen inside the project submission flow, not on a separate page. That full flow only opens when organizers unlock it on event day.",
+    },
+    {
+        id: "04",
+        q: "WHAT_KIND_OF_PROJECTS?",
+        a: "Software only. This is not a hardware hackathon, so do not build your plan around physical fabrication, soldering, or device labs.",
     },
 ];
 
@@ -29,14 +34,17 @@ function FAQItem({ faq }: { faq: (typeof faqs)[0] }) {
     return (
         <motion.div
             variants={fadeUp}
-            className="bg-surface-container-high border border-outline-variant/10 overflow-hidden"
+            whileHover={{ y: -4, borderColor: "rgba(57,255,20,0.24)" }}
+            className="bg-surface-container-high border border-outline-variant/10 overflow-hidden transition-colors"
         >
             <button
                 onClick={() => setOpen((p) => !p)}
                 className="w-full text-left p-6 flex items-center justify-between group"
             >
                 <div className="font-bold text-lg text-primary-container uppercase flicker">
-                    {faq.id} // {faq.q}
+                    {faq.id}
+                    {" // "}
+                    {faq.q}
                 </div>
                 <motion.span
                     animate={{ rotate: open ? 45 : 0 }}
@@ -57,7 +65,7 @@ function FAQItem({ faq }: { faq: (typeof faqs)[0] }) {
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className="overflow-hidden"
                     >
-                        <p className="font-mono text-sm text-on-surface-variant px-6 pb-6">
+                        <p className="px-6 pb-6 font-mono text-sm leading-7 text-on-surface-variant">
                             {faq.a}
                         </p>
                     </motion.div>
@@ -95,8 +103,8 @@ export default function FAQSection() {
                         variants={fadeUp}
                         className="font-mono text-on-surface-variant text-sm"
                     >
-                        Common inquiries regarding the operational parameters of Framework
-                        2027.
+                        The constraints matter more than the marketing. Here is the actual operating
+                        brief.
                     </motion.p>
                 </motion.div>
 

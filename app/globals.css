@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -53,10 +53,10 @@
   --color-neon-green: #39FF14;
 
   /* Fonts */
-  --font-headline: 'Space Grotesk', sans-serif;
-  --font-body: 'Space Grotesk', sans-serif;
-  --font-label: 'Space Grotesk', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-headline: var(--font-space-grotesk), sans-serif;
+  --font-body: var(--font-space-grotesk), sans-serif;
+  --font-label: var(--font-space-grotesk), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
 
   /* Border radius */
   --radius: 0px;
@@ -70,6 +70,10 @@
   --animate-marquee: marquee 30s linear infinite;
   --animate-glow-breathe: glow-breathe 3s ease-in-out infinite;
   --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
+  --animate-grid-drift: grid-drift 26s linear infinite;
+  --animate-scanline-drift: scanline-drift 12s linear infinite;
+  --animate-float-slow: float-slow 8s ease-in-out infinite;
+  --animate-panel-sheen: panel-sheen 3.4s ease-in-out infinite;
 }
 
 html {
@@ -80,7 +84,7 @@ html {
 body {
   background-color: #131313;
   color: #e5e2e1;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-space-grotesk), sans-serif;
   overflow-x: hidden;
 }
 
@@ -89,6 +93,7 @@ body {
   background: linear-gradient(to bottom, transparent 50%, rgba(57, 255, 20, 0.02) 50%);
   background-size: 100% 4px;
   pointer-events: none;
+  animation: scanline-drift 12s linear infinite;
 }
 
 /* Glitch on hover */
@@ -112,6 +117,27 @@ body {
 .grid-bg {
   background-image: radial-gradient(#3c4b35 1px, transparent 1px);
   background-size: 32px 32px;
+  animation: grid-drift 26s linear infinite;
+}
+
+@keyframes grid-drift {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 32px 32px;
+  }
+}
+
+@keyframes scanline-drift {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 0 24px;
+  }
 }
 
 /* Flicker */
@@ -173,6 +199,39 @@ body {
 .animate-marquee {
   display: inline-block;
   animation: marquee 30s linear infinite;
+}
+
+.panel-sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-sheen::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: linear-gradient(115deg, transparent 35%, rgba(57, 255, 20, 0.08) 48%, transparent 60%);
+  transform: translateX(-55%) rotate(8deg);
+  animation: panel-sheen 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes panel-sheen {
+  0%,
+  100% {
+    transform: translateX(-55%) rotate(8deg);
+    opacity: 0;
+  }
+
+  35%,
+  65% {
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateX(55%) rotate(8deg);
+    opacity: 0.9;
+  }
 }
 
 /* Neon text glow */
@@ -288,4 +347,26 @@ html.lenis {
   50% {
     box-shadow: 0 0 40px rgba(57, 255, 20, 0.6);
   }
+}
+
+.float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+/* ── Hide system cursor everywhere — TargetCursor replaces it ── */
+*,
+*::before,
+*::after {
+  cursor: none !important;
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/app/lib/auth";
 import { prisma } from "@/app/lib/prisma";
+import { getEventConfig } from "@/app/lib/event-config";
 
 export async function GET() {
     const user = await getCurrentUser();
@@ -16,6 +17,11 @@ export async function GET() {
 export async function POST(req: NextRequest) {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const config = await getEventConfig();
+
+    if (!config.projectSubmissionsOpen) {
+        return NextResponse.json({ error: "Team creation opens when project submissions go live." }, { status: 403 });
+    }
 
     // Check accepted
     const app = await prisma.application.findUnique({ where: { userId: user.id } });
@@ -59,6 +65,10 @@ export async function POST(req: NextRequest) {
 export async function DELETE() {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const config = await getEventConfig();
+    if (!config.projectSubmissionsOpen) {
+        return NextResponse.json({ error: "Team changes are locked until project submissions open." }, { status: 403 });
+    }
     await prisma.teamMember.deleteMany({ where: { userId: user.id } });
     return NextResponse.json({ ok: true });
 }

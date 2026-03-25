@@ -127,6 +127,15 @@ model Project {
   awards           AwardWinner[]
 }
 
+model EventConfig {
+  id                     String   @id @default("main")
+  themePrompt            String?
+  themeReleased          Boolean  @default(false)
+  projectSubmissionsOpen Boolean  @default(false)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
 // ─── JUDGING ─────────────────────────────────────────────────────────────────
 
 model JudgingRound {

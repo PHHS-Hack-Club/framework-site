@@ -10,28 +10,28 @@ const bentoCards = [
         id: "main",
         span: "md:col-span-2",
         icon: "code",
-        title: "24_HOUR_CRITICAL_HACK",
-        body: "Framework 2027 is the premier hackathon for Bergen County students. We've stripped away the corporate fluff to focus on what matters: pure building. Whether you're soldering custom PCBs or architecting distributed systems, this is your arena.",
-        tags: ["Students_Only", "Free_Entry", "Open_Source"],
+        title: "SAME_DAY_SOFTWARE_SPRINT",
+        body: "Framework 2027 is a same-day software hackathon for Bergen County students who already know how to build. This is not an overnight stay and not a beginner workshop. The twist is day-of: the theme drops on site, then teams ship against it under pressure.",
+        tags: ["Students_Only", "Software_Only", "Theme_Drops_DayOf"],
         highlight: true,
         topBorder: false,
     },
     {
-        id: "hw",
+        id: "offline",
         span: "",
-        icon: "memory",
-        title: "HARDWARE_LAB",
-        body: "Access to 3D printers, soldering irons, and a massive components library for your physical prototypes.",
+        icon: "cloud_off",
+        title: "OFFLINE_FIRST_STACK",
+        body: "The venue internet will be there, but not reliably enough to build a cloud-dependent workflow from scratch. Cache packages, preload docs, and make sure your repo can move without a pristine connection.",
         tags: [],
         highlight: false,
         topBorder: true,
     },
     {
-        id: "dev",
+        id: "experienced",
         span: "",
         icon: "terminal",
-        title: "DEV_STATIONS",
-        body: "Dedicated high-speed zones with secondary monitors and ergonomic peripherals for intense coding sprints.",
+        title: "READY_TO_BUILD",
+        body: "Expect peer-level competition and minimal hand-holding. Teams form inside the project flow when organizers open it, so show up ready to lock in quickly.",
         tags: [],
         highlight: false,
         topBorder: false,
@@ -78,7 +78,8 @@ export default function AboutSection() {
                     <motion.div
                         key={card.id}
                         variants={fadeUp}
-                        whileHover={{ scale: 1.01, y: -2 }}
+                        whileHover={{ scale: 1.015, y: -8, rotateX: 2.5 }}
+                        transition={{ type: "spring", stiffness: 220, damping: 20 }}
                         className={`${card.span} bg-surface-container-high p-8 flex flex-col justify-between relative overflow-hidden group cursor-default ${card.topBorder ? "border-t-4 border-[#39FF14]" : ""
                             }`}
                     >
@@ -125,29 +126,6 @@ export default function AboutSection() {
                     </motion.div>
                 ))}
 
-                {/* Wide network card */}
-                <motion.div
-                    variants={fadeUp}
-                    whileHover={{ scale: 1.01 }}
-                    className="md:col-span-2 bg-surface-container-highest p-8 flex items-center justify-between group cursor-default"
-                >
-                    <div>
-                        <h3 className="text-xl font-bold uppercase mb-2">
-                            NETWORK_ACCESS
-                        </h3>
-                        <p className="text-sm font-mono text-on-surface-variant max-w-md">
-                            Private VLANs for every team. No throttles. No filters. Just raw
-                            bandwidth.
-                        </p>
-                    </div>
-                    <motion.div
-                        className="text-[#39FF14] font-mono text-4xl font-bold flicker ml-8 shrink-0"
-                        animate={{ opacity: [1, 0.4, 1] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                    >
-                        10_Gbps
-                    </motion.div>
-                </motion.div>
             </motion.div>
         </section>
     );

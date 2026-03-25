@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
 import { getCurrentUser } from "@/app/lib/auth";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { sendEmail } from "@/app/lib/mail";
 
 export async function GET(req: NextRequest) {
     const user = await getCurrentUser();
@@ -35,13 +33,13 @@ export async function POST(req: NextRequest) {
     const emails = await getEmails(audience ?? "ALL");
     if (emails.length === 0) return NextResponse.json({ error: "No recipients found." }, { status: 400 });
 
-    // Resend supports batch of up to 100; chunk accordingly
+    // Keep organizer blasts chunked to reduce burst size on SMTP providers.
     const CHUNK = 50;
     for (let i = 0; i < emails.length; i += CHUNK) {
         const chunk = emails.slice(i, i + CHUNK);
-        await resend.emails.send({
-            from: process.env.RESEND_FROM ?? "Framework 2027 <noreply@resend.dev>",
-            to: chunk,
+        await sendEmail({
+            to: process.env.SMTP_FROM ?? process.env.SMTP_USER,
+            bcc: chunk,
             subject,
             html: `
         <body style="background:#131313;color:#e5e2e1;font-family:monospace;padding:40px;">

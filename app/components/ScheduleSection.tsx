@@ -7,21 +7,23 @@ import { fadeUp, stagger } from "@/app/lib/animations";
 
 const schedule = [
     {
-        day: "DAY_01: INITIALIZATION",
+        day: "PREP_WINDOW",
         events: [
-            { time: "09:00", label: "OPERATOR_CHECK_IN", location: "MAIN_LOBBY", status: null },
-            { time: "10:00", label: "SYSTEM_BOOT (OPENING)", location: "AUDITORIUM", status: null },
-            { time: "11:00", label: "HACKING_START", location: null, status: "LIVE" },
-            { time: "14:00", label: "HARDWARE_WORKSHOP_01", location: "LAB_7", status: null },
+            { time: "T-7D", label: "CACHE_DEPENDENCIES", location: "LOCAL_MACHINE", status: null },
+            { time: "T-3D", label: "PREP_TEAM_OPTIONS", location: "SHARED_DOC", status: null },
+            { time: "T-1D", label: "VERIFY_LOCAL_RUN_PATH", location: "TERMINAL", status: "REQUIRED" },
         ],
     },
     {
-        day: "DAY_02: EXECUTION",
+        day: "EVENT_DAY",
         events: [
-            { time: "08:00", label: "BREAKFAST_PROTOCOL", location: "REFECTORY", status: null },
-            { time: "11:00", label: "HACKING_END", location: null, status: "TERMINATED" },
-            { time: "13:00", label: "PROJECT_JUDGING", location: "MAIN_FLOOR", status: null },
-            { time: "15:00", label: "CLOSING_CEREMONY", location: "AUDITORIUM", status: null },
+            { time: "09:00", label: "CHECK_IN_AND_SETUP", location: "MAIN_LOBBY", status: null },
+            { time: "10:00", label: "THEME_REVEAL_AND_BRIEF", location: "AUDITORIUM", status: null },
+            { time: "10:15", label: "TEAM_AND_PROJECT_FLOW_OPEN", location: null, status: "LIVE" },
+            { time: "10:30", label: "SOFTWARE_BUILD_WINDOW", location: null, status: null },
+            { time: "17:00", label: "SUBMISSION_FREEZE", location: null, status: "LOCKED" },
+            { time: "17:30", label: "PROJECT_JUDGING", location: "MAIN_FLOOR", status: null },
+            { time: "18:30", label: "CLOSING_AND_AWARDS", location: "AUDITORIUM", status: null },
         ],
     },
 ];
@@ -36,14 +38,26 @@ export default function ScheduleSection() {
             ref={ref}
             className="py-24 px-8 md:px-24 bg-surface-container-lowest"
         >
-            <motion.h2
-                variants={fadeUp}
+            <motion.div
+                variants={stagger}
                 initial="hidden"
                 animate={inView ? "show" : "hidden"}
-                className="text-4xl md:text-6xl font-black italic tracking-tighter uppercase mb-16 text-center"
+                className="mb-16 text-center"
             >
-                SEQUENCE_TIMELINE
-            </motion.h2>
+                <motion.h2
+                    variants={fadeUp}
+                    className="text-4xl md:text-6xl font-black italic tracking-tighter uppercase"
+                >
+                    SEQUENCE_TIMELINE
+                </motion.h2>
+                <motion.p
+                    variants={fadeUp}
+                    className="mx-auto mt-5 max-w-2xl font-mono text-sm leading-7 text-on-surface-variant"
+                >
+                    Prepare before you arrive, then expect a single-day push on site. The theme, team
+                    flow, and project submission window all go live day-of.
+                </motion.p>
+            </motion.div>
 
             <div className="max-w-4xl mx-auto space-y-12">
                 {schedule.map((day, di) => (
@@ -67,7 +81,7 @@ export default function ScheduleSection() {
                                 <motion.div
                                     key={ev.time}
                                     variants={fadeUp}
-                                    whileHover={{ x: 4, backgroundColor: "rgba(57,255,20,0.03)" }}
+                                    whileHover={{ x: 6, y: -2, backgroundColor: "rgba(57,255,20,0.04)" }}
                                     className={`flex justify-between items-center p-6 border-b border-outline-variant/10 ${ei % 2 === 0 ? "bg-surface-container" : "bg-surface"
                                         } transition-all cursor-default`}
                                 >
@@ -77,18 +91,20 @@ export default function ScheduleSection() {
                                     <span className="font-bold uppercase tracking-tight flex-1 px-4">
                                         {ev.label}
                                     </span>
-                                    {ev.status === "LIVE" ? (
+                                    {ev.status ? (
                                         <motion.span
-                                            animate={{ opacity: [1, 0.3, 1] }}
-                                            transition={{ duration: 1, repeat: Infinity }}
-                                            className="text-xs font-mono text-[#39FF14] uppercase"
+                                            animate={ev.status === "LIVE" ? { opacity: [1, 0.35, 1] } : undefined}
+                                            transition={ev.status === "LIVE" ? { duration: 1, repeat: Infinity } : undefined}
+                                            className={`text-xs font-mono uppercase ${
+                                                ev.status === "LIVE"
+                                                    ? "text-[#39FF14]"
+                                                    : ev.status === "REQUIRED"
+                                                      ? "text-[#ffd3ce]"
+                                                      : "text-[#baccb0]"
+                                            }`}
                                         >
-                                            LIVE
+                                            {ev.status}
                                         </motion.span>
-                                    ) : ev.status === "TERMINATED" ? (
-                                        <span className="text-xs font-mono text-error uppercase">
-                                            TERMINATED
-                                        </span>
                                     ) : ev.location ? (
                                         <span className="text-xs font-mono text-on-surface-variant hidden md:block">
                                             {ev.location}

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#0d0d0d"/>
+
+  <!-- Top-left bracket -->
+  <polyline points="20,6 6,6 6,20"  stroke="#39FF14" stroke-width="2.5" stroke-linecap="square" fill="none"/>
+  <!-- Top-right bracket -->
+  <polyline points="44,6 58,6 58,20" stroke="#39FF14" stroke-width="2.5" stroke-linecap="square" fill="none"/>
+  <!-- Bottom-left bracket -->
+  <polyline points="6,44 6,58 20,58"  stroke="#39FF14" stroke-width="2.5" stroke-linecap="square" fill="none"/>
+  <!-- Bottom-right bracket -->
+  <polyline points="58,44 58,58 44,58" stroke="#39FF14" stroke-width="2.5" stroke-linecap="square" fill="none"/>
+
+  <!-- Crosshair arms (gap at center for dot) -->
+  <line x1="32" y1="24" x2="32" y2="29" stroke="#39FF14" stroke-width="1.5"/>
+  <line x1="32" y1="35" x2="32" y2="40" stroke="#39FF14" stroke-width="1.5"/>
+  <line x1="24" y1="32" x2="29" y2="32" stroke="#39FF14" stroke-width="1.5"/>
+  <line x1="35" y1="32" x2="40" y2="32" stroke="#39FF14" stroke-width="1.5"/>
+
+  <!-- Center dot (solid neon green) -->
+  <circle cx="32" cy="32" r="2.8" fill="#39FF14"/>
+</svg>
