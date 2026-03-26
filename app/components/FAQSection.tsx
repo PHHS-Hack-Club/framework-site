@@ -29,7 +29,7 @@ const faqs = [
     {
         id: "05",
         q: "DO_I_NEED_MY_SCHOOL_ID?",
-        a: "Yes, and this is enforced. Bring your physical school ID — no ID means no entry, no exceptions. You also upload a photo of it during the application so organizers can pre-verify you before the event.",
+        a: "Yes, and this is enforced. Bring your physical school ID — no ID means no entry, no exceptions. You also need to upload a photo of it during the application so organizers can pre-verify you before the event.",
     },
 ];
 

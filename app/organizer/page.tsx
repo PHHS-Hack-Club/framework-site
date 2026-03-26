@@ -4,7 +4,7 @@ import { getEventConfig } from "@/app/lib/event-config";
 import EventControls from "./components/EventControls";
 
 export default async function OrganizerDashboard() {
-    const [total, accepted, pending, waitlisted, rejected, checkedIn, teams, projects, judges, eventConfig] = await Promise.all([
+    const [total, accepted, pending, waitlisted, rejected, checkedIn, teams, projects, judges, newContacts, eventConfig] = await Promise.all([
         prisma.application.count(),
         prisma.application.count({ where: { status: "ACCEPTED" } }),
         prisma.application.count({ where: { status: "PENDING" } }),
@@ -14,6 +14,7 @@ export default async function OrganizerDashboard() {
         prisma.team.count(),
         prisma.project.count(),
         prisma.user.count({ where: { role: "JUDGE" } }),
+        prisma.contactMessage.count({ where: { status: "NEW" } }),
         getEventConfig(),
     ]);
 
@@ -29,10 +30,12 @@ export default async function OrganizerDashboard() {
         { label: "TEAMS", value: teams, color: "border-on-surface-variant" },
         { label: "PROJECTS", value: projects, color: "border-on-surface-variant" },
         { label: "JUDGES", value: judges, color: "border-on-surface-variant" },
+        { label: "NEW_CONTACTS", value: newContacts, color: "border-yellow-400" },
     ];
 
     const actions = [
         { href: "/organizer/applications", label: "Review Applications", sub: `${pending} pending`, urgent: pending > 0 },
+        { href: "/organizer/contacts", label: "Contact Inbox", sub: `${newContacts} new threads`, urgent: newContacts > 0 },
         { href: "/organizer/checkin", label: "Day-of Check-in", sub: `${checkedIn}/${accepted} checked in`, urgent: false },
         { href: "/organizer/judging", label: "Manage Judging", sub: "Create & open rounds", urgent: false },
         { href: "/organizer/export", label: "Export PPTX", sub: "Ceremony deck", urgent: false },

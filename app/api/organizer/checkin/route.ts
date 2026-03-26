@@ -13,6 +13,8 @@ export async function GET(req: NextRequest) {
                 { email: { contains: q, mode: "insensitive" } },
                 { firstName: { contains: q, mode: "insensitive" } },
                 { lastName: { contains: q, mode: "insensitive" } },
+                { application: { is: { github: { contains: q, mode: "insensitive" } } } },
+                { application: { is: { school: { contains: q, mode: "insensitive" } } } },
             ],
         },
         include: { application: true },

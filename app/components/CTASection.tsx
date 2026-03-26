@@ -99,7 +99,7 @@ export default function CTASection({ dashboardHref }: { dashboardHref: string | 
                         transition={{ duration: 1.5, repeat: Infinity }}
                         className="w-2 h-2 rounded-full bg-[#39FF14]"
                     />
-                    APPLICATIONS_OPEN // THEME_DAY_OF // SOFTWARE_ONLY
+                    APPLICATIONS_OPEN // THEME ??? // PRIZE_POOL ???
                 </motion.div>
             </motion.div>
         </section>

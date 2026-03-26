@@ -41,10 +41,10 @@ export default async function HackerDashboard() {
                 <div className="bg-surface-container-high p-6 border-t-2 border-[#39FF14]">
                     <div className="font-mono text-xs text-on-surface-variant tracking-widest mb-2">THEME</div>
                     <div className="text-sm font-black text-[#39FF14] uppercase tracking-tight">
-                        {eventConfig.themeReleased ? "LIVE" : "DAY_OF_REVEAL"}
+                        {eventConfig.themeReleased ? eventConfig.themePrompt ?? "???" : "???"}
                     </div>
                     <div className="mt-2 font-mono text-xs text-on-surface-variant">
-                        {eventConfig.themeReleased ? eventConfig.themePrompt ?? "Theme released." : "Prompt stays hidden until organizers release it."}
+                        {eventConfig.themeReleased ? "Theme visible to hackers." : "Theme withheld."}
                     </div>
                 </div>
                 <div className="bg-surface-container-high p-6 border-t-2 border-outline-variant/30">

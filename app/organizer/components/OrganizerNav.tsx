@@ -8,6 +8,7 @@ const NAV = [
     { href: "/organizer", label: "DASHBOARD", icon: "⬡" },
     { href: "/organizer/applications", label: "APPLICATIONS", icon: "◈" },
     { href: "/organizer/members", label: "MEMBERS", icon: "◎" },
+    { href: "/organizer/contacts", label: "CONTACTS", icon: "☍" },
     { href: "/organizer/email", label: "MASS EMAIL", icon: "✉" },
     { href: "/organizer/schedule", label: "SCHEDULE", icon: "◫" },
     { href: "/organizer/judges", label: "JUDGES", icon: "◉" },

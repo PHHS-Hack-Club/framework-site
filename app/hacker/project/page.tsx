@@ -218,12 +218,12 @@ export default function ProjectPage() {
                 <div className="border border-[#39FF14]/15 bg-surface-container-high p-6">
                     <div className="font-mono text-xs uppercase tracking-[0.2em] text-[#39FF14]">THEME_STATUS</div>
                     <div className="mt-4 text-2xl font-black uppercase tracking-tight">
-                        {config?.themeReleased ? "THEME_LIVE" : "REVEALS_DAY_OF"}
+                        {config?.themeReleased ? "THEME_LIVE" : "???"}
                     </div>
                     <p className="mt-3 font-mono text-sm leading-7 text-on-surface-variant">
                         {config?.themeReleased && config.themePrompt
                             ? config.themePrompt
-                            : "The prompt stays hidden until organizers release it at the event."}
+                            : "Theme withheld."}
                     </p>
                 </div>
 
@@ -251,12 +251,12 @@ export default function ProjectPage() {
             <div className="border border-[#39FF14]/15 bg-surface-container-high p-6">
                 <div className="font-mono text-xs uppercase tracking-[0.2em] text-[#39FF14]">DAY_OF_THEME</div>
                 <div className="mt-3 text-2xl font-black uppercase tracking-tight">
-                    {config?.themeReleased ? "LIVE_PROMPT" : "RELEASE_PENDING"}
+                    {config?.themeReleased ? "LIVE_PROMPT" : "???"}
                 </div>
                 <p className="mt-3 font-mono text-sm leading-7 text-on-surface-variant">
                     {config?.themeReleased && config.themePrompt
                         ? config.themePrompt
-                        : "Organizers have opened project flow, but the theme text is still hidden."}
+                        : "Theme withheld."}
                 </p>
             </div>
 

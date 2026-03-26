@@ -80,7 +80,7 @@ export default function LocationSection() {
                     whileHover={{ y: -4, borderColor: "rgba(57,255,20,0.38)", boxShadow: "0 0 20px rgba(57,255,20,0.1)" }}
                     className="mb-8 border border-[#39FF14]/15 bg-black/20 p-4 font-mono text-xs uppercase tracking-[0.2em] text-on-surface-variant"
                 >
-                    Bring a charged laptop, your full dev environment, all dependencies cached offline, and{" "}
+                    Bring a charged laptop, your full dev environment, and{" "}
                     <strong style={{ color: "#e5e2e1" }}>your physical school ID</strong>.
                 </motion.div>
 
@@ -100,7 +100,6 @@ export default function LocationSection() {
                         >
                             <motion.span
                                 className="material-symbols-outlined text-[#39FF14]"
-                                whileHover={{ scale: 1.2, rotate: 8 }}
                             >
                                 {spec.icon}
                             </motion.span>

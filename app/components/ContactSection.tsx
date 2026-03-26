@@ -122,17 +122,17 @@ export default function ContactSection() {
                             className="border border-[#39FF14]/10 bg-[#111211] p-4"
                         >
                             <div className="mb-2 text-[#39FF14]">Primary Inbox</div>
-                            <div className="break-all text-[11px] normal-case tracking-normal text-on-surface">
-                                alexradu@phhshack.club
+                            <div className="text-[11px] normal-case tracking-normal text-on-surface">
+                                Contact form only
                             </div>
                         </motion.div>
                         <motion.div
                             whileHover={{ y: -4, borderColor: "rgba(57,255,20,0.3)", boxShadow: "0 4px 20px rgba(57,255,20,0.08)" }}
                             className="border border-[#39FF14]/10 bg-[#111211] p-4"
                         >
-                            <div className="mb-2 text-[#39FF14]">Backup Copy</div>
-                            <div className="break-all text-[11px] normal-case tracking-normal text-on-surface">
-                                al3x.radu1@gmail.com
+                            <div className="mb-2 text-[#39FF14]">Response Path</div>
+                            <div className="text-[11px] normal-case tracking-normal text-on-surface">
+                                Replies go to your submitted email
                             </div>
                         </motion.div>
                     </motion.div>

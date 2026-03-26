@@ -86,7 +86,7 @@ function JudgeSetupForm() {
                         whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
                         type="submit"
                         disabled={loading || !password || !confirm}
-                        className="w-full bg-primary-container text-on-primary py-4 font-mono font-bold tracking-widest uppercase text-sm disabled:opacity-50 glow-breathe"
+                        className="w-full bg-primary-container px-4 py-4 font-mono text-sm font-bold uppercase leading-tight tracking-[0.14em] text-on-primary [overflow-wrap:anywhere] disabled:opacity-50 glow-breathe sm:tracking-widest"
                     >
                         {loading ? "SETTING UP..." : "SET_PASSWORD & ACCESS_DASHBOARD →"}
                     </motion.button>
@@ -103,7 +103,7 @@ export default function JudgeSetupPage() {
         >
             <div className="font-mono text-xs text-[#39FF14] tracking-[0.3em] uppercase mb-1">FRAMEWORK_2027</div>
             <h1 className="text-2xl font-black italic tracking-tighter uppercase mb-1">JUDGE_SETUP</h1>
-            <p className="font-mono text-xs text-on-surface-variant tracking-widest mb-8">
+            <p className="mb-8 font-mono text-xs leading-relaxed tracking-[0.16em] text-on-surface-variant [overflow-wrap:anywhere] sm:tracking-widest">
                 CREATE_YOUR_PASSWORD_TO_ACCESS_THE_JUDGE_DASHBOARD
             </p>
             <Suspense fallback={<div className="font-mono text-xs text-on-surface-variant animate-pulse">LOADING...</div>}>

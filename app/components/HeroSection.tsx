@@ -79,13 +79,12 @@ function SlotNumber({ to, delay = 0 }: { to: number; delay?: number }) {
 }
 
 const TICKER =
-    " ⬡ FRAMEWORK 2027 ⬡ PHHS HACK CLUB ⬡ BERGEN COUNTY ⬡ PRIZES $5,000+ ⬡ SAME-DAY BUILD ⬡ SOFTWARE ONLY ⬡ PRIOR CODING REQUIRED ⬡ THEME_REVEALED_DAY_OF >";
+    " ⬡ FRAMEWORK 2027 ⬡ PHHS HACK CLUB ⬡ BERGEN COUNTY ⬡ PRIZE_POOL ??? ⬡ SAME-DAY BUILD ⬡ SOFTWARE ONLY ⬡ PRIOR CODING REQUIRED ⬡ THEME ??? >";
 
 const SIGNAL_TAGS = [
     "same-day build sprint",
     "software only",
     "prior coding required",
-    "theme drops day-of",
 ];
 
 let hasPlayedHeroBoot = false;
@@ -177,13 +176,13 @@ export default function HeroSection({ dashboardHref }: { dashboardHref: string |
             />
             <div className="pointer-events-none absolute -left-20 bottom-12 z-[1] h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(57,255,20,0.12),transparent_70%)] blur-3xl opacity-15" />
 
-            <div className="relative z-10 grid h-full grid-cols-1 items-center px-6 pb-12 pt-20 md:grid-cols-[minmax(0,0.92fr)_minmax(360px,0.98fr)] md:gap-2 md:px-14 md:pb-14 md:pt-20 lg:px-20 lg:pb-16">
-                <div className="max-w-[38rem] md:max-w-[40rem] md:pr-6">
+            <div className="relative z-10 grid h-full grid-cols-1 items-center px-6 pb-20 pt-18 md:grid-cols-[minmax(0,0.84fr)_minmax(320px,0.96fr)] md:gap-3 md:px-12 md:pb-22 md:pt-16 lg:px-16 lg:pb-24 lg:pt-16">
+                <div className="max-w-[36rem] md:max-w-[37rem] md:pr-4">
                     <motion.div
                         initial={{ opacity: 0, x: -30, filter: "blur(8px)" }}
                         animate={booted ? { opacity: 1, x: 0, filter: "blur(0px)" } : {}}
                         transition={{ delay: 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                        className="mb-4 flex items-center gap-3 md:mb-5 md:gap-4"
+                        className="mb-3 flex items-center gap-3 md:mb-4 md:gap-4"
                     >
                         <motion.div
                             initial={{ scale: 0.8, opacity: 0 }}
@@ -211,13 +210,13 @@ export default function HeroSection({ dashboardHref }: { dashboardHref: string |
                         animate={booted ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
                         transition={{ delay: 0.25, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                         id="hero-title"
-                        className="mb-2 font-headline font-black uppercase italic leading-[0.9] md:mb-3"
+                        className="mb-2 font-headline font-black uppercase italic leading-[0.9] md:mb-2"
                     >
                         <motion.span
                             initial={{ opacity: 0, x: -20 }}
                             animate={booted ? { opacity: 1, x: 0 } : {}}
                             transition={{ delay: 0.3, duration: 0.5 }}
-                            className="block text-[clamp(2.4rem,6.5vw,5.5rem)] text-on-surface"
+                            className="block text-[clamp(2.2rem,5.8vw,5rem)] text-on-surface"
                         >
                             FRAME
                         </motion.span>
@@ -225,7 +224,7 @@ export default function HeroSection({ dashboardHref }: { dashboardHref: string |
                             initial={{ opacity: 0, x: -20 }}
                             animate={booted ? { opacity: 1, x: 0 } : {}}
                             transition={{ delay: 0.4, duration: 0.5 }}
-                            className="block text-[clamp(2.4rem,6.5vw,5.5rem)] text-on-surface"
+                            className="block text-[clamp(2.2rem,5.8vw,5rem)] text-on-surface"
                         >
                             WORK
                         </motion.span>
@@ -242,7 +241,7 @@ export default function HeroSection({ dashboardHref }: { dashboardHref: string |
                                 ],
                             } : {}}
                             transition={{ delay: 0.5, duration: 0.8, textShadow: { duration: 2.5, repeat: Infinity, ease: "easeInOut" } }}
-                            className="block text-[clamp(3rem,8.5vw,7rem)] leading-[0.88] text-[#39FF14]"
+                            className="block text-[clamp(2.7rem,7.3vw,6.2rem)] leading-[0.88] text-[#39FF14]"
                         >
                             2027
                         </motion.span>
@@ -253,14 +252,14 @@ export default function HeroSection({ dashboardHref }: { dashboardHref: string |
                         animate={booted ? { scaleX: 1 } : {}}
                         transition={{ delay: 0.6, duration: 1, ease: "easeOut" }}
                         style={{ originX: 0 }}
-                        className="mb-3 h-[2px] w-32 bg-gradient-to-r from-[#39FF14] to-transparent md:mb-4 md:w-40"
+                        className="mb-2 h-[2px] w-28 bg-gradient-to-r from-[#39FF14] to-transparent md:mb-3 md:w-36"
                     />
 
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={booted ? { opacity: 1 } : {}}
                         transition={{ delay: 0.7 }}
-                        className="mb-2 font-mono text-[11px] uppercase tracking-[0.22em] text-on-surface-variant md:mb-3"
+                        className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-on-surface-variant md:mb-2"
                     >
                         PHHS HACK CLUB // BERGEN COUNTY, NJ
                     </motion.p>
@@ -268,7 +267,7 @@ export default function HeroSection({ dashboardHref }: { dashboardHref: string |
                         initial={{ opacity: 0 }}
                         animate={booted ? { opacity: 1 } : {}}
                         transition={{ delay: 0.85 }}
-                        className="mb-4 min-h-[1.5rem] max-w-sm font-mono text-sm text-[#39FF14]/80 md:mb-5 md:max-w-md md:text-[15px]"
+                        className="mb-3 min-h-[1.5rem] max-w-sm font-mono text-sm text-[#39FF14]/80 md:mb-4 md:max-w-md md:text-[14px]"
                     >
                         {booted && (
                             <GlitchTyper
@@ -283,7 +282,7 @@ export default function HeroSection({ dashboardHref }: { dashboardHref: string |
                         initial={{ opacity: 0, y: 16 }}
                         animate={booted ? { opacity: 1, y: 0 } : {}}
                         transition={{ delay: 1 }}
-                        className="mb-5 flex flex-wrap gap-2 md:mb-6"
+                        className="mb-4 flex flex-wrap gap-2 md:mb-5"
                     >
                         {SIGNAL_TAGS.map((tag, index) => (
                             <motion.span
@@ -303,12 +302,12 @@ export default function HeroSection({ dashboardHref }: { dashboardHref: string |
                         initial={{ opacity: 0, y: 16 }}
                         animate={booted ? { opacity: 1, y: 0 } : {}}
                         transition={{ delay: 0.9 }}
-                        className="mb-5 flex flex-wrap gap-x-6 gap-y-3 md:mb-6 md:gap-x-8"
+                        className="mb-4 flex flex-wrap gap-x-5 gap-y-3 md:mb-5 md:gap-x-7"
                     >
                         {[
-                            { label: "THEME", display: "N/A" },
+                            { label: "THEME", display: "???" },
                             { label: "MAX_TEAM", val: 4, suffix: "" },
-                            { label: "PRIZE_$", val: 5000, suffix: "+" },
+                            { label: "PRIZE_$", display: "???" },
                         ].map((s, index) => (
                             <motion.div
                                 key={s.label}
@@ -380,7 +379,7 @@ export default function HeroSection({ dashboardHref }: { dashboardHref: string |
                     initial={{ opacity: 0, filter: "blur(16px)" }}
                     animate={booted ? { opacity: 1, filter: "blur(0px)" } : {}}
                     transition={{ delay: 0.8, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                    className="relative hidden h-[26rem] w-full md:block lg:h-[34rem] xl:h-[38rem]"
+                    className="relative hidden w-full self-center md:block md:h-[30rem] lg:h-[34rem] xl:h-[38rem]"
                 >
                     <Suspense fallback={<div className="h-full w-full" />}>
                         <HeroScene />

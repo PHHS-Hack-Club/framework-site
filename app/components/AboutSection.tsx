@@ -17,11 +17,11 @@ const bentoCards = [
         topBorder: false,
     },
     {
-        id: "offline",
+        id: "wifi",
         span: "",
-        icon: "cloud_off",
-        title: "OFFLINE_FIRST_STACK",
-        body: "Venue internet will be available but don't depend on it. Cache packages, preload docs, and make sure your dev environment runs clean before you arrive.",
+        icon: "wifi",
+        title: "VENUE_WIFI_AVAILABLE",
+        body: "Venue Wi-Fi will be available. Show up with your tools installed, your stack ready, and your environment stable so you can start building immediately.",
         tags: [],
         highlight: false,
         topBorder: true,
@@ -31,7 +31,7 @@ const bentoCards = [
         span: "md:col-span-2",
         icon: "emoji_events",
         title: "PRIZES_AND_JUDGING",
-        body: "$5,000+ split across placing teams. Projects are evaluated on execution quality, technical depth, and fit to the revealed theme. Judging happens same-day and results are announced at the closing ceremony.",
+        body: "Prize pool: ???. Projects are evaluated on execution quality, technical depth, and fit to the released prompt. Judging happens same-day and results are announced at the closing ceremony.",
         tags: [],
         highlight: false,
         topBorder: true,
@@ -116,7 +116,6 @@ export default function AboutSection() {
                         <div>
                             <motion.span
                                 className="material-symbols-outlined text-[#39FF14] mb-4 glow-breathe block"
-                                whileHover={{ scale: 1.3, rotate: -12 }}
                                 transition={{ type: "spring", stiffness: 300 }}
                             >
                                 {card.icon}

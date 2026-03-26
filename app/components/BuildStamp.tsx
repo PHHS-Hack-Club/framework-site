@@ -1,4 +1,4 @@
-import { BUILD_ID } from "@/app/lib/site";
+import { BUILD_ID } from "@/app/lib/build";
 
 export default function BuildStamp() {
     return (

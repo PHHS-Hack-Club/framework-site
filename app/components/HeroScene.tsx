@@ -9,7 +9,7 @@ export default function HeroScene() {
         <Canvas
             className="h-full w-full"
             camera={{ position: [1.2, 0.8, 5.2], fov: 42 }}
-            style={{ width: "100%", height: "100%", background: "transparent", cursor: "grab" }}
+            style={{ width: "100%", height: "100%", background: "transparent", cursor: "none" }}
             gl={{
                 alpha: true,
                 antialias: false,

@@ -3,7 +3,24 @@
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 
-type Hacker = { id: string; firstName: string | null; lastName: string | null; email: string; application: { checkedIn: boolean; school: string; checkedInAt: string | null } | null };
+type Hacker = {
+    id: string;
+    firstName: string | null;
+    lastName: string | null;
+    email: string;
+    application: {
+        status: string;
+        checkedIn: boolean;
+        checkedInAt: string | null;
+        school: string;
+        grade: string;
+        github: string | null;
+        experience: string;
+        tshirt: string;
+        dietary: string | null;
+        schoolIdPath: string | null;
+    } | null;
+};
 
 export default function CheckInPage() {
     const [query, setQuery] = useState("");
@@ -27,7 +44,7 @@ export default function CheckInPage() {
     }
 
     return (
-        <div className="space-y-8 max-w-2xl">
+        <div className="space-y-8 max-w-5xl">
             <h1 className="text-4xl font-black italic tracking-tighter uppercase">DAY_OF_CHECKIN</h1>
 
             <div className="relative">
@@ -44,28 +61,104 @@ export default function CheckInPage() {
                     <div className="font-mono text-xs text-on-surface-variant">NO_RESULTS</div>
                 )}
                 {results.map(h => (
-                    <motion.div key={h.id} layout className={`p-5 border flex items-center justify-between transition-colors ${h.application?.checkedIn ? "bg-[#39FF14]/5 border-[#39FF14]/30" : "bg-surface-container-high border-outline-variant/10"}`}>
-                        <div>
-                            <div className="font-bold uppercase tracking-tight">
-                                {h.firstName ?? ""} {h.lastName ?? h.email}
-                            </div>
-                            <div className="font-mono text-xs text-on-surface-variant mt-0.5">
-                                {h.email} · {h.application?.school ?? "No application"}
-                            </div>
-                            {h.application?.checkedIn && h.application.checkedInAt && (
-                                <div className="font-mono text-xs text-[#39FF14] mt-0.5">
-                                    Checked in at {new Date(h.application.checkedInAt).toLocaleTimeString()}
+                    <motion.div
+                        key={h.id}
+                        layout
+                        className={`p-5 border transition-colors ${h.application?.checkedIn ? "bg-[#39FF14]/5 border-[#39FF14]/30" : "bg-surface-container-high border-outline-variant/10"}`}
+                    >
+                        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+                            <div className="min-w-0 flex-1 space-y-4">
+                                <div>
+                                    <div className="font-bold uppercase tracking-tight">
+                                        {h.firstName ?? ""} {h.lastName ?? h.email}
+                                    </div>
+                                    <div className="font-mono text-xs text-on-surface-variant mt-0.5 break-all">
+                                        {h.email}
+                                    </div>
+                                    {h.application?.checkedIn && h.application.checkedInAt && (
+                                        <div className="font-mono text-xs text-[#39FF14] mt-1">
+                                            Checked in at {new Date(h.application.checkedInAt).toLocaleTimeString()}
+                                        </div>
+                                    )}
                                 </div>
+
+                                {h.application ? (
+                                    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_13rem]">
+                                        <div className="grid gap-2 sm:grid-cols-2">
+                                            {[
+                                                ["Status", h.application.status],
+                                                ["School", h.application.school],
+                                                ["Grade", h.application.grade],
+                                                ["Experience", h.application.experience],
+                                                ["T-Shirt", h.application.tshirt],
+                                                ["Dietary", h.application.dietary ?? "None"],
+                                            ].map(([label, value]) => (
+                                                <div key={label} className="min-w-0 border border-outline-variant/15 bg-black/15 px-3 py-2">
+                                                    <div className="font-mono text-[10px] tracking-widest uppercase text-on-surface-variant">{label}</div>
+                                                    <div className="mt-1 font-mono text-xs break-words">{value}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <div className="border border-outline-variant/15 bg-black/15 px-3 py-2">
+                                                <div className="font-mono text-[10px] tracking-widest uppercase text-on-surface-variant">GitHub</div>
+                                                {h.application.github ? (
+                                                    <a
+                                                        href={`https://github.com/${h.application.github.replace(/^@/, "").replace(/^https?:\/\/github\.com\//, "").replace(/\/$/, "")}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="mt-1 block font-mono text-xs break-all text-[#39FF14] hover:underline"
+                                                    >
+                                                        {h.application.github}
+                                                    </a>
+                                                ) : (
+                                                    <div className="mt-1 font-mono text-xs text-on-surface-variant">Not provided</div>
+                                                )}
+                                            </div>
+
+                                            <div className="border border-outline-variant/15 bg-black/15 p-2">
+                                                <div className="font-mono text-[10px] tracking-widest uppercase text-on-surface-variant px-1 pb-2">School ID</div>
+                                                {h.application.schoolIdPath ? (
+                                                    <a
+                                                        href={`/api/organizer/school-id/${h.application.schoolIdPath}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="block border border-outline-variant/20 overflow-hidden hover:border-[#39FF14]/40 transition-colors group"
+                                                    >
+                                                        <img
+                                                            src={`/api/organizer/school-id/${h.application.schoolIdPath}`}
+                                                            alt="School ID"
+                                                            className="h-28 w-full object-contain bg-black/30 group-hover:opacity-90 transition-opacity"
+                                                        />
+                                                        <div className="px-3 py-1.5 font-mono text-[10px] text-on-surface-variant tracking-widest">
+                                                            VIEW_ID ↗
+                                                        </div>
+                                                    </a>
+                                                ) : (
+                                                    <div className="px-1 py-3 font-mono text-xs text-error">NOT_SUBMITTED</div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="font-mono text-xs text-on-surface-variant">NO_APPLICATION</div>
+                                )}
+                            </div>
+
+                            {h.application ? (
+                                <motion.button
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => toggle(h.id, h.application!.checkedIn)}
+                                    disabled={toggling === h.id}
+                                    className={`shrink-0 font-mono text-xs tracking-widest uppercase px-6 py-3 border font-bold transition-colors disabled:opacity-50 ${h.application.checkedIn ? "border-error/30 text-error hover:bg-error/10" : "border-[#39FF14]/30 text-[#39FF14] hover:bg-[#39FF14]/10"}`}
+                                >
+                                    {toggling === h.id ? "..." : h.application.checkedIn ? "UNDO_CHECKIN" : "CHECK_IN_"}
+                                </motion.button>
+                            ) : (
+                                <span className="font-mono text-xs text-on-surface-variant">NO_APPLICATION</span>
                             )}
                         </div>
-                        {h.application ? (
-                            <motion.button whileTap={{ scale: 0.95 }} onClick={() => toggle(h.id, h.application!.checkedIn)} disabled={toggling === h.id}
-                                className={`font-mono text-xs tracking-widest uppercase px-6 py-3 border font-bold transition-colors disabled:opacity-50 ${h.application.checkedIn ? "border-error/30 text-error hover:bg-error/10" : "border-[#39FF14]/30 text-[#39FF14] hover:bg-[#39FF14]/10"}`}>
-                                {toggling === h.id ? "..." : h.application.checkedIn ? "UNDO_CHECKIN" : "CHECK_IN_"}
-                            </motion.button>
-                        ) : (
-                            <span className="font-mono text-xs text-on-surface-variant">NO_APPLICATION</span>
-                        )}
                     </motion.div>
                 ))}
             </div>
