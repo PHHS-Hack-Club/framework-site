@@ -42,10 +42,17 @@ export default function SignupPage() {
             >
                 <div className="text-[#39FF14] font-mono text-5xl mb-4">✓</div>
                 <h2 className="text-xl font-black italic tracking-tighter uppercase mb-2">CHECK_YOUR_EMAIL</h2>
-                <p className="font-mono text-sm text-on-surface-variant">
+                <p className="font-mono text-sm text-on-surface-variant mb-5">
                     A verification link has been sent to <strong className="text-on-surface">{form.email}</strong>.
                     Click it to activate your account.
                 </p>
+                <div className="text-left border border-yellow-400/30 bg-yellow-400/5 p-4 space-y-2">
+                    <p className="font-mono text-xs text-yellow-400 font-bold tracking-widest">⚠ DIDN&apos;T RECEIVE IT?</p>
+                    <p className="font-mono text-xs text-yellow-400/80 leading-relaxed">
+                        Check your <strong className="text-yellow-400">spam or junk folder</strong> — our emails occasionally land there.
+                        If you find it, please mark it as <strong className="text-yellow-400">Not Spam</strong> so future emails reach your inbox.
+                    </p>
+                </div>
             </motion.div>
         );
     }

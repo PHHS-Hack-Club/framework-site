@@ -60,9 +60,9 @@ const config: Config = {
                 neonGreen: "#39FF14",
             },
             fontFamily: {
-                headline: ["Space Grotesk", "sans-serif"],
-                body: ["Space Grotesk", "sans-serif"],
-                label: ["Space Grotesk", "sans-serif"],
+                headline: ["Source Code Pro", "monospace"],
+                body: ["Source Code Pro", "monospace"],
+                label: ["Source Code Pro", "monospace"],
                 mono: ["JetBrains Mono", "monospace"],
             },
             borderRadius: {

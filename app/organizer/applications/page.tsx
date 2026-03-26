@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 type Application = {
     id: string; status: string; school: string; grade: string; experience: string;
     shortAnswer: string; createdAt: string; reviewNote: string | null;
+    schoolIdPath: string | null;
     user: { email: string; firstName: string | null; lastName: string | null };
 };
 
@@ -43,6 +44,17 @@ export default function ApplicationsPage() {
         });
         setSelected(null); setNote("");
         await load();
+        setActing(false);
+    }
+
+    async function deleteMember(id: string, email: string) {
+        if (!confirm(`Permanently delete account for ${email}? This cannot be undone.`)) return;
+        setActing(true);
+        const res = await fetch(`/api/organizer/applications/${id}`, { method: "DELETE" });
+        if (res.ok) {
+            setSelected(null);
+            await load();
+        }
         setActing(false);
     }
 
@@ -121,6 +133,29 @@ export default function ApplicationsPage() {
                             </div>
 
                             <div>
+                                <div className="font-mono text-xs text-on-surface-variant mb-2">SCHOOL_ID</div>
+                                {selected.schoolIdPath ? (
+                                    <a
+                                        href={`/api/organizer/school-id/${selected.schoolIdPath}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="block border border-outline-variant/20 overflow-hidden hover:border-[#39FF14]/40 transition-colors group"
+                                    >
+                                        <img
+                                            src={`/api/organizer/school-id/${selected.schoolIdPath}`}
+                                            alt="School ID"
+                                            className="w-full max-h-32 object-contain bg-black/30 group-hover:opacity-90 transition-opacity"
+                                        />
+                                        <div className="px-3 py-1.5 font-mono text-[10px] text-on-surface-variant tracking-widest">
+                                            VIEW_FULL_SIZE ↗
+                                        </div>
+                                    </a>
+                                ) : (
+                                    <div className="font-mono text-xs text-error">NOT_SUBMITTED</div>
+                                )}
+                            </div>
+
+                            <div>
                                 <label className="font-mono text-xs text-on-surface-variant tracking-widest block mb-2">REVIEW_NOTE</label>
                                 <textarea value={note} onChange={e => setNote(e.target.value)} rows={3}
                                     className="w-full bg-surface border border-outline-variant/30 px-3 py-2 font-mono text-xs text-on-surface focus:outline-none focus:border-[#39FF14] resize-none" />
@@ -136,6 +171,16 @@ export default function ApplicationsPage() {
                                         {acting ? "SAVING..." : `MARK_${s}_`}
                                     </button>
                                 ))}
+                            </div>
+
+                            <div className="border-t border-outline-variant/10 pt-4">
+                                <button
+                                    disabled={acting}
+                                    onClick={() => deleteMember(selected.id, selected.user.email)}
+                                    className="w-full py-2.5 font-mono text-xs tracking-widest uppercase border border-red-500/20 text-red-400 hover:bg-red-500/10 hover:border-red-500/40 transition-colors disabled:opacity-40"
+                                >
+                                    {acting ? "WORKING..." : "DELETE_MEMBER_"}
+                                </button>
                             </div>
 
                             <button onClick={() => setSelected(null)} className="w-full font-mono text-xs text-on-surface-variant hover:text-on-surface transition-colors">

@@ -13,13 +13,13 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
   background: #39FF14;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   will-change: transform;
-  box-shadow: 0 0 6px #39FF14, 0 0 12px rgba(57, 255, 20, 0.5);
+  box-shadow: 0 0 8px #39FF14, 0 0 18px rgba(57, 255, 20, 0.5);
 }
 
 .target-cursor-corner {
@@ -28,31 +28,40 @@
   top: 50%;
   width: 12px;
   height: 12px;
-  border: 2px solid #39FF14;
   will-change: transform;
-  box-shadow: 0 0 4px rgba(57, 255, 20, 0.6);
+  filter: drop-shadow(0 0 4px rgba(57, 255, 20, 0.6));
+  background-repeat: no-repeat;
+  background-size: 100% 2px, 2px 100%;
 }
 
 .corner-tl {
   transform: translate(-150%, -150%);
-  border-right: none;
-  border-bottom: none;
+  background-image:
+    linear-gradient(#39FF14, #39FF14),
+    linear-gradient(#39FF14, #39FF14);
+  background-position: left top, left top;
 }
 
 .corner-tr {
   transform: translate(50%, -150%);
-  border-left: none;
-  border-bottom: none;
+  background-image:
+    linear-gradient(#39FF14, #39FF14),
+    linear-gradient(#39FF14, #39FF14);
+  background-position: right top, right top;
 }
 
 .corner-br {
   transform: translate(50%, 50%);
-  border-left: none;
-  border-top: none;
+  background-image:
+    linear-gradient(#39FF14, #39FF14),
+    linear-gradient(#39FF14, #39FF14);
+  background-position: right bottom, right bottom;
 }
 
 .corner-bl {
   transform: translate(-150%, 50%);
-  border-right: none;
-  border-top: none;
+  background-image:
+    linear-gradient(#39FF14, #39FF14),
+    linear-gradient(#39FF14, #39FF14);
+  background-position: left bottom, left bottom;
 }

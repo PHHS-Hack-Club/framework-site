@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
+import { gsap } from "gsap";
 
 export default function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
@@ -13,12 +14,10 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
             touchMultiplier: 2.0,
         });
 
-        let raf: number;
-        function raf_loop(time: number) {
-            lenis.raf(time);
-            raf = requestAnimationFrame(raf_loop);
-        }
-        raf = requestAnimationFrame(raf_loop);
+        // Drive Lenis from GSAP's ticker — eliminates a competing RAF loop
+        const tick = (time: number) => lenis.raf(time * 1000);
+        gsap.ticker.add(tick);
+        gsap.ticker.lagSmoothing(0);
 
         // Make anchor links work with Lenis
         document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
@@ -30,7 +29,7 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
         });
 
         return () => {
-            cancelAnimationFrame(raf);
+            gsap.ticker.remove(tick);
             lenis.destroy();
         };
     }, []);

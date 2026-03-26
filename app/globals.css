@@ -53,9 +53,9 @@
   --color-neon-green: #39FF14;
 
   /* Fonts */
-  --font-headline: var(--font-space-grotesk), sans-serif;
-  --font-body: var(--font-space-grotesk), sans-serif;
-  --font-label: var(--font-space-grotesk), sans-serif;
+  --font-headline: var(--font-source-code-pro), monospace;
+  --font-body: var(--font-jetbrains-mono), monospace;
+  --font-label: var(--font-source-code-pro), monospace;
   --font-mono: var(--font-jetbrains-mono), monospace;
 
   /* Border radius */
@@ -73,7 +73,6 @@
   --animate-grid-drift: grid-drift 26s linear infinite;
   --animate-scanline-drift: scanline-drift 12s linear infinite;
   --animate-float-slow: float-slow 8s ease-in-out infinite;
-  --animate-panel-sheen: panel-sheen 3.4s ease-in-out infinite;
 }
 
 html {
@@ -84,16 +83,15 @@ html {
 body {
   background-color: #131313;
   color: #e5e2e1;
-  font-family: var(--font-space-grotesk), sans-serif;
+  font-family: var(--font-source-code-pro), monospace;
   overflow-x: hidden;
 }
 
 /* Scanline overlay */
 .scanline-overlay {
-  background: linear-gradient(to bottom, transparent 50%, rgba(57, 255, 20, 0.02) 50%);
-  background-size: 100% 4px;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.18) 50%);
+  background-size: 100% 3px;
   pointer-events: none;
-  animation: scanline-drift 12s linear infinite;
 }
 
 /* Glitch on hover */
@@ -206,37 +204,16 @@ body {
   overflow: hidden;
 }
 
-.panel-sheen::after {
-  content: "";
-  position: absolute;
-  inset: -30%;
-  background: linear-gradient(115deg, transparent 35%, rgba(57, 255, 20, 0.08) 48%, transparent 60%);
-  transform: translateX(-55%) rotate(8deg);
-  animation: panel-sheen 3.4s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes panel-sheen {
-  0%,
-  100% {
-    transform: translateX(-55%) rotate(8deg);
-    opacity: 0;
-  }
-
-  35%,
-  65% {
-    opacity: 1;
-  }
-
-  50% {
-    transform: translateX(55%) rotate(8deg);
-    opacity: 0.9;
-  }
-}
-
 /* Neon text glow */
 .neon-text {
   text-shadow: 0 0 10px rgba(57, 255, 20, 0.8), 0 0 20px rgba(57, 255, 20, 0.5), 0 0 40px rgba(57, 255, 20, 0.3);
+}
+
+/* Focus glow on inputs */
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 0 1px rgba(57, 255, 20, 0.3), 0 0 20px rgba(57, 255, 20, 0.08);
 }
 
 /* Custom scrollbar */
@@ -365,6 +342,11 @@ html.lenis {
 }
 
 /* ── Hide system cursor everywhere — TargetCursor replaces it ── */
+html,
+body {
+  cursor: none !important;
+}
+
 *,
 *::before,
 *::after {

@@ -10,6 +10,7 @@ function LoginForm() {
     const router = useRouter();
     const params = useSearchParams();
     const verified = params.get("verified");
+    const reset = params.get("reset");
     const error = params.get("error");
 
     const [email, setEmail] = useState("");
@@ -51,9 +52,9 @@ function LoginForm() {
                 AUTHENTICATE_TO_CONTINUE
             </p>
 
-            {verified && (
+            {(verified || reset) && (
                 <div className="mb-6 p-3 border-l-4 border-[#39FF14] bg-[#39FF14]/5 font-mono text-xs text-[#39FF14]">
-                    EMAIL_VERIFIED — You can now log in.
+                    {verified ? "EMAIL_VERIFIED — You can now log in." : "PASSWORD_UPDATED — Log in with your new password."}
                 </div>
             )}
             {(err || error === "unauthorized") && (
@@ -77,9 +78,14 @@ function LoginForm() {
                     />
                 </div>
                 <div>
-                    <label className="font-mono text-xs text-on-surface-variant tracking-widest block mb-2">
-                        PASSWORD
-                    </label>
+                    <div className="flex items-center justify-between mb-2">
+                        <label className="font-mono text-xs text-on-surface-variant tracking-widest">
+                            PASSWORD
+                        </label>
+                        <Link href="/auth/forgot-password" className="font-mono text-[10px] text-on-surface-variant hover:text-[#39FF14] transition-colors tracking-widest">
+                            FORGOT?
+                        </Link>
+                    </div>
                     <input
                         type="password"
                         value={password}

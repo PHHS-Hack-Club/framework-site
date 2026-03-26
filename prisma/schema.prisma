@@ -36,8 +36,10 @@ model User {
   passwordHash      String
   role              Role      @default(HACKER)
   emailVerified     Boolean   @default(false)
-  verificationToken String?   @unique
-  tokenExpiresAt    DateTime?
+  verificationToken    String?   @unique
+  tokenExpiresAt       DateTime?
+  resetToken           String?   @unique
+  resetTokenExpiresAt  DateTime?
   firstName         String?
   lastName          String?
   createdAt         DateTime  @default(now())
@@ -74,6 +76,7 @@ model Application {
   tshirt       String
   shortAnswer  String
   status       ApplicationStatus @default(PENDING)
+  schoolIdPath String?
   checkedIn    Boolean           @default(false)
   checkedInAt  DateTime?
   reviewNote   String?

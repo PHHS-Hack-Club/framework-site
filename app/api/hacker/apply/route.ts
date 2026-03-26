@@ -10,10 +10,13 @@ export async function POST(req: NextRequest) {
     if (existing) return NextResponse.json({ error: "Application already submitted." }, { status: 409 });
 
     const body = await req.json();
-    const { school, grade, github, experience, dietary, tshirt, shortAnswer } = body;
+    const { school, grade, github, experience, dietary, tshirt, shortAnswer, schoolIdPath } = body;
 
     if (!school || !grade || !github || !experience || !tshirt || !shortAnswer) {
         return NextResponse.json({ error: "All required fields must be filled." }, { status: 400 });
+    }
+    if (!schoolIdPath) {
+        return NextResponse.json({ error: "School ID photo is required." }, { status: 400 });
     }
 
     await prisma.application.create({
@@ -26,6 +29,7 @@ export async function POST(req: NextRequest) {
             dietary: dietary || null,
             tshirt,
             shortAnswer,
+            schoolIdPath,
         },
     });
 

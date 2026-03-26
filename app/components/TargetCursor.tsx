@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback, useMemo } from "react";
+import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import "./TargetCursor.css";
 
@@ -22,16 +23,22 @@ const TargetCursor = ({
     const spinTl = useRef<gsap.core.Timeline | null>(null);
     const dotRef = useRef<HTMLDivElement>(null);
 
+    const pathname = usePathname();
     const isActiveRef = useRef(false);
     const targetCornerPositionsRef = useRef<{ x: number; y: number }[] | null>(null);
     const tickerFnRef = useRef<(() => void) | null>(null);
     const activeStrengthRef = useRef({ current: 0 });
+    const hasShownCursorRef = useRef(false);
+    const resetCursorRef = useRef<(() => void) | null>(null);
 
     const isMobile = useMemo(() => {
         if (typeof window === "undefined") return false;
         const hasTouchScreen = "ontouchstart" in window || navigator.maxTouchPoints > 0;
         const isSmallScreen = window.innerWidth <= 768;
-        const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+        const userAgent =
+            navigator.userAgent ||
+            navigator.vendor ||
+            String((window as Window & { opera?: unknown }).opera ?? "");
         const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
         const isMobileUserAgent = mobileRegex.test(userAgent.toLowerCase());
         return (hasTouchScreen && isSmallScreen) || isMobileUserAgent;
@@ -47,8 +54,19 @@ const TargetCursor = ({
     useEffect(() => {
         if (isMobile || !cursorRef.current) return;
 
+        const html = document.documentElement;
+        const body = document.body;
+        const originalHtmlCursor = html.style.cursor;
         const originalCursor = document.body.style.cursor;
-        if (hideDefaultCursor) document.body.style.cursor = "none";
+        const activeStrength = activeStrengthRef.current;
+
+        const forceHideCursor = () => {
+            if (!hideDefaultCursor) return;
+            html.style.setProperty("cursor", "none", "important");
+            body.style.setProperty("cursor", "none", "important");
+        };
+
+        forceHideCursor();
 
         const cursor = cursorRef.current;
         cornersRef.current = cursor.querySelectorAll(".target-cursor-corner");
@@ -56,6 +74,40 @@ const TargetCursor = ({
         let activeTarget: Element | null = null;
         let currentLeaveHandler: (() => void) | null = null;
         let resumeTimeout: ReturnType<typeof setTimeout> | null = null;
+
+        // Reset cursor to idle state (used on route changes)
+        const resetToIdle = () => {
+            if (tickerFnRef.current) gsap.ticker.remove(tickerFnRef.current);
+            isActiveRef.current = false;
+            targetCornerPositionsRef.current = null;
+            gsap.set(activeStrengthRef.current, { current: 0, overwrite: true });
+            if (activeTarget && currentLeaveHandler) {
+                activeTarget.removeEventListener("mouseleave", currentLeaveHandler);
+            }
+            activeTarget = null;
+            currentLeaveHandler = null;
+            if (cornersRef.current) {
+                const cs = Array.from(cornersRef.current);
+                gsap.killTweensOf(cs);
+                const { cornerSize } = constants;
+                const positions = [
+                    { x: -cornerSize * 1.5, y: -cornerSize * 1.5 },
+                    { x: cornerSize * 0.5, y: -cornerSize * 1.5 },
+                    { x: cornerSize * 0.5, y: cornerSize * 0.5 },
+                    { x: -cornerSize * 1.5, y: cornerSize * 0.5 },
+                ];
+                cs.forEach((c, idx) =>
+                    gsap.to(c, { x: positions[idx].x, y: positions[idx].y, duration: 0.2, ease: "power3.out" })
+                );
+            }
+            if (cursorRef.current && spinTl.current) {
+                spinTl.current.kill();
+                spinTl.current = gsap
+                    .timeline({ repeat: -1 })
+                    .to(cursorRef.current, { rotation: "+=360", duration: spinDuration, ease: "none" });
+            }
+        };
+        resetCursorRef.current = resetToIdle;
 
         const cleanupTarget = (target: Element) => {
             if (currentLeaveHandler) target.removeEventListener("mouseleave", currentLeaveHandler);
@@ -65,8 +117,7 @@ const TargetCursor = ({
         gsap.set(cursor, {
             xPercent: -50,
             yPercent: -50,
-            x: window.innerWidth / 2,
-            y: window.innerHeight / 2,
+            autoAlpha: 0,
         });
 
         const createSpinTimeline = () => {
@@ -100,8 +151,23 @@ const TargetCursor = ({
 
         tickerFnRef.current = tickerFn;
 
-        const moveHandler = (e: MouseEvent) => moveCursor(e.clientX, e.clientY);
+        const moveHandler = (e: MouseEvent) => {
+            if (!hasShownCursorRef.current) {
+                hasShownCursorRef.current = true;
+                gsap.set(cursor, {
+                    x: e.clientX,
+                    y: e.clientY,
+                    autoAlpha: 1,
+                });
+                return;
+            }
+            moveCursor(e.clientX, e.clientY);
+        };
+        const enforceCursorHandler = () => forceHideCursor();
         window.addEventListener("mousemove", moveHandler);
+        window.addEventListener("mouseover", enforceCursorHandler, true);
+        window.addEventListener("focusin", enforceCursorHandler, true);
+        window.addEventListener("dragstart", enforceCursorHandler, true);
 
         const scrollHandler = () => {
             if (!activeTarget || !cursorRef.current) return;
@@ -230,16 +296,21 @@ const TargetCursor = ({
         return () => {
             if (tickerFnRef.current) gsap.ticker.remove(tickerFnRef.current);
             window.removeEventListener("mousemove", moveHandler);
+            window.removeEventListener("mouseover", enforceCursorHandler, true);
+            window.removeEventListener("focusin", enforceCursorHandler, true);
+            window.removeEventListener("dragstart", enforceCursorHandler, true);
             window.removeEventListener("mouseover", enterHandler as EventListener);
             window.removeEventListener("scroll", scrollHandler);
             window.removeEventListener("mousedown", mouseDownHandler);
             window.removeEventListener("mouseup", mouseUpHandler);
             if (activeTarget) cleanupTarget(activeTarget);
             spinTl.current?.kill();
+            html.style.cursor = originalHtmlCursor;
             document.body.style.cursor = originalCursor;
+            hasShownCursorRef.current = false;
             isActiveRef.current = false;
             targetCornerPositionsRef.current = null;
-            activeStrengthRef.current.current = 0;
+            activeStrength.current = 0;
         };
     }, [targetSelector, spinDuration, moveCursor, constants, hideDefaultCursor, isMobile, hoverDuration, parallaxOn]);
 
@@ -252,6 +323,11 @@ const TargetCursor = ({
                 .to(cursorRef.current, { rotation: "+=360", duration: spinDuration, ease: "none" });
         }
     }, [spinDuration, isMobile]);
+
+    // Reset cursor state on route changes so it doesn't stay locked to a removed element
+    useEffect(() => {
+        if (resetCursorRef.current) resetCursorRef.current();
+    }, [pathname]);
 
     if (isMobile) return null;
 

@@ -1,8 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, lazy, Suspense } from "react";
 import { motion, useInView } from "framer-motion";
-import { fadeUp, stagger } from "@/app/lib/animations";
+import { slideFromLeft, slideFromRight, fadeUp, stagger, staggerSlow } from "@/app/lib/animations";
+
+const SatelliteMap = lazy(() => import("./SatelliteMap"));
 
 const specs = [
     {
@@ -12,6 +14,10 @@ const specs = [
     {
         icon: "terminal",
         text: "SOFTWARE_PROJECTS_ONLY",
+    },
+    {
+        icon: "badge",
+        text: "SCHOOL_ID_REQUIRED — No ID, no entry.",
     },
 ];
 
@@ -25,124 +31,79 @@ export default function LocationSection() {
             ref={ref}
             className="py-24 px-8 md:px-24 bg-surface-container-lowest grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
         >
-            {/* Map / graphic */}
+            {/* Map / graphic — slides in from left */}
             <motion.div
-                variants={fadeUp}
+                variants={slideFromLeft}
                 initial="hidden"
                 animate={inView ? "show" : "hidden"}
-                whileHover={{ y: -8 }}
+                whileHover={{ y: -8, scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 className="relative group"
             >
-                <div className="absolute -inset-4 border border-[#39FF14]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={inView ? { opacity: 1 } : { opacity: 0 }}
+                    transition={{ delay: 0.6, duration: 0.8 }}
+                    className="absolute -inset-4 border border-[#39FF14]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"
+                />
 
-                {/* Wireframe 3D map visualization */}
-                <div className="w-full aspect-square bg-[#0a0a0a] border border-outline-variant/20 relative overflow-hidden flex items-center justify-center">
-                    {/* Grid overlay */}
-                    <div
-                        className="absolute inset-0 opacity-30"
-                        style={{
-                            backgroundImage:
-                                "linear-gradient(rgba(57,255,20,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(57,255,20,0.15) 1px, transparent 1px)",
-                            backgroundSize: "32px 32px",
-                        }}
-                    />
-
-                    {/* Animated radar rings */}
-                    {[1, 2, 3, 4].map((i) => (
-                        <motion.div
-                            key={i}
-                            className="absolute border border-[#39FF14]/20 rounded-full"
-                            style={{
-                                width: `${i * 25}%`,
-                                height: `${i * 25}%`,
-                            }}
-                            animate={{ scale: [1, 1.02, 1], opacity: [0.4, 0.2, 0.4] }}
-                            transition={{
-                                duration: 3,
-                                repeat: Infinity,
-                                delay: i * 0.4,
-                                ease: "easeInOut",
-                            }}
-                        />
-                    ))}
-
-                    {/* Cross hairs */}
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="w-full h-[1px] bg-[#39FF14]/20" />
+                <Suspense fallback={
+                    <div className="w-full aspect-square bg-[#0a0a0a] border border-outline-variant/20 flex items-center justify-center font-mono text-xs text-on-surface-variant animate-pulse">
+                        LOADING_MAP...
                     </div>
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="w-[1px] h-full bg-[#39FF14]/20" />
-                    </div>
-
-                    {/* Target dot */}
-                    <motion.div
-                        animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                        className="w-3 h-3 rounded-full bg-[#39FF14] shadow-[0_0_20px_#39FF14] relative z-10"
-                    />
-
-                    {/* Coordinate overlay */}
-                    <div className="absolute top-4 left-4 bg-surface/90 backdrop-blur-md p-4 border-l-2 border-[#39FF14] z-20">
-                        <div className="font-mono text-xs text-on-surface-variant mb-1">
-                            TARGET_COORDINATES
-                        </div>
-                        <div className="font-mono text-lg text-primary-container font-bold flicker">
-                            41.05° N, 74.05° W
-                        </div>
-                    </div>
-
-                    {/* Scanning line */}
-                    <motion.div
-                        className="absolute left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#39FF14]/60 to-transparent"
-                        animate={{ top: ["0%", "100%", "0%"] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                    />
-                </div>
+                }>
+                    <SatelliteMap />
+                </Suspense>
             </motion.div>
 
-            {/* Text content */}
+            {/* Text content — slides in from right */}
             <motion.div
-                variants={stagger}
+                variants={staggerSlow}
                 initial="hidden"
                 animate={inView ? "show" : "hidden"}
             >
                 <motion.h2
-                    variants={fadeUp}
+                    variants={slideFromRight}
                     className="text-4xl md:text-6xl font-black italic tracking-tighter mb-8 uppercase"
                 >
                     THE HUB
                 </motion.h2>
                 <motion.p
-                    variants={fadeUp}
+                    variants={slideFromRight}
                     className="font-mono text-on-surface-variant text-lg mb-8 leading-relaxed"
                 >
-                    Operations will be hosted at{" "}
-                    <span className="text-on-surface font-bold">
-                        Pascack Hills High School
-                    </span>{" "}
-                    in Montvale, NJ. The campus becomes a dense one-day software build floor,
-                    not an overnight sleepover and not a hardware lab.
+                    <span className="text-on-surface font-bold">Pascack Hills High School</span>
+                    {" "}in Montvale, NJ. The campus becomes a one-day software build floor — not an overnight stay, not a hardware lab. You arrive, the theme drops, you ship.
                 </motion.p>
                 <motion.div
-                    variants={fadeUp}
-                    whileHover={{ y: -4, borderColor: "rgba(57,255,20,0.38)" }}
+                    variants={slideFromRight}
+                    whileHover={{ y: -4, borderColor: "rgba(57,255,20,0.38)", boxShadow: "0 0 20px rgba(57,255,20,0.1)" }}
                     className="mb-8 border border-[#39FF14]/15 bg-black/20 p-4 font-mono text-xs uppercase tracking-[0.2em] text-on-surface-variant"
                 >
-                    Bring a charged laptop, a working local environment, and anything you need cached
-                    ahead of time.
+                    Bring a charged laptop, your full dev environment, all dependencies cached offline, and{" "}
+                    <strong style={{ color: "#e5e2e1" }}>your physical school ID</strong>.
                 </motion.div>
 
                 <motion.div variants={stagger} className="space-y-4">
-                    {specs.map((spec) => (
+                    {specs.map((spec, i) => (
                         <motion.div
                             key={spec.icon}
                             variants={fadeUp}
-                            className="flex items-center gap-4 p-4 bg-surface border-l-2 border-outline-variant hover:border-[#39FF14] transition-colors group cursor-default"
-                            whileHover={{ x: 6, y: -2 }}
+                            custom={i}
+                            className="flex items-center gap-4 p-4 bg-surface border-l-2 border-outline-variant hover:border-[#39FF14] transition-all group cursor-default"
+                            whileHover={{
+                                x: 12,
+                                y: -2,
+                                borderColor: "#39FF14",
+                                boxShadow: "0 4px 20px rgba(57,255,20,0.08)",
+                            }}
                         >
-                            <span className="material-symbols-outlined text-[#39FF14]">
+                            <motion.span
+                                className="material-symbols-outlined text-[#39FF14]"
+                                whileHover={{ scale: 1.2, rotate: 8 }}
+                            >
                                 {spec.icon}
-                            </span>
+                            </motion.span>
                             <span className="font-mono text-sm">{spec.text}</span>
                         </motion.div>
                     ))}

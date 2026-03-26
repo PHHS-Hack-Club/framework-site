@@ -66,7 +66,7 @@ export default function JudgesPage() {
                     className="mt-4 px-8 py-3 bg-primary-container text-on-primary font-mono text-xs tracking-widest uppercase font-bold disabled:opacity-50">
                     {adding ? "ADDING..." : "ADD_JUDGE_"}
                 </motion.button>
-                <p className="font-mono text-xs text-on-surface-variant mt-3">A temporary password will be emailed to the judge via Resend.</p>
+                <p className="font-mono text-xs text-on-surface-variant mt-3">A welcome email with a password setup link will be sent to the judge. The link expires in 7 days.</p>
             </div>
 
             {/* Judge list */}

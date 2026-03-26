@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { JetBrains_Mono, Source_Code_Pro } from "next/font/google";
 import "./globals.css";
 import BuildStamp from "./components/BuildStamp";
 
-const headlineFont = Space_Grotesk({
+const headlineFont = Source_Code_Pro({
   subsets: ["latin"],
-  variable: "--font-space-grotesk",
+  weight: ["400", "700", "900"],
+  style: ["normal", "italic"],
+  variable: "--font-source-code-pro",
 });
 
 const monoFont = JetBrains_Mono({
@@ -14,6 +16,7 @@ const monoFont = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.APP_URL ?? "https://framework.phhshack.club"),
   title: "FRAMEWORK 2027 | PHHS HACK CLUB",
   description:
     "Framework 2027 — a same-day software hackathon for Bergen County students who already know how to build.",

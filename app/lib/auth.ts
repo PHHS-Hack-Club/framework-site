@@ -124,7 +124,14 @@ export async function sendVerificationEmail(
                       text-decoration:none;font-weight:700;letter-spacing:2px;text-transform:uppercase;">
               VERIFY_EMAIL →
             </a>
-            <p style="color:#3c4b35;font-size:11px;margin-top:32px;">
+            <div style="margin-top:32px;border-left:3px solid #f59e0b;padding:12px 16px;background:rgba(245,158,11,0.08);">
+              <p style="color:#f59e0b;font-size:11px;font-weight:700;letter-spacing:2px;margin:0 0 6px;">⚠ DIDN'T EXPECT THIS?</p>
+              <p style="color:#d97706;font-size:11px;margin:0;line-height:1.6;">
+                If this email landed in your <strong>spam or junk folder</strong>, please mark it as
+                <strong>Not Spam</strong> — we send important updates about your application and event day through this address.
+              </p>
+            </div>
+            <p style="color:#3c4b35;font-size:11px;margin-top:20px;">
               If you didn't create an account, ignore this email.
             </p>
           </div>
@@ -153,6 +160,13 @@ export async function sendPasswordResetEmail(
             <a href="${url}" style="display:inline-block;background:#39FF14;color:#053900;padding:14px 28px;text-decoration:none;font-weight:700;text-transform:uppercase;">
               RESET_PASSWORD →
             </a>
+            <div style="margin-top:28px;border-left:3px solid #f59e0b;padding:12px 16px;background:rgba(245,158,11,0.08);">
+              <p style="color:#f59e0b;font-size:11px;font-weight:700;letter-spacing:2px;margin:0 0 6px;">⚠ EMAIL IN SPAM?</p>
+              <p style="color:#d97706;font-size:11px;margin:0;line-height:1.6;">
+                If this landed in your <strong>spam or junk folder</strong>, mark it as <strong>Not Spam</strong>
+                so future messages from us reach your inbox.
+              </p>
+            </div>
           </div>
         </body>
       </html>

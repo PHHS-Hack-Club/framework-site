@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/app/lib/auth";
+import { isAdminEmail } from "@/app/lib/site";
 import { redirect } from "next/navigation";
 import OrganizerNav from "./components/OrganizerNav";
 
@@ -8,7 +9,10 @@ export default async function OrganizerLayout({ children }: { children: React.Re
 
     return (
         <div className="min-h-screen bg-background text-on-surface font-body flex">
-            <OrganizerNav user={{ email: user.email, firstName: user.firstName }} />
+            <OrganizerNav
+                user={{ email: user.email, firstName: user.firstName }}
+                isHeadAdmin={isAdminEmail(user.email)}
+            />
             <main className="flex-1 ml-64 p-8 min-h-screen">
                 <div className="max-w-6xl mx-auto">{children}</div>
             </main>

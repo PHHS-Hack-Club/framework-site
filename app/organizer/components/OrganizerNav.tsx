@@ -7,7 +7,8 @@ import { motion } from "framer-motion";
 const NAV = [
     { href: "/organizer", label: "DASHBOARD", icon: "⬡" },
     { href: "/organizer/applications", label: "APPLICATIONS", icon: "◈" },
-    { href: "/organizer/email", label: "MASS EMAIL", icon: "◎" },
+    { href: "/organizer/members", label: "MEMBERS", icon: "◎" },
+    { href: "/organizer/email", label: "MASS EMAIL", icon: "✉" },
     { href: "/organizer/schedule", label: "SCHEDULE", icon: "◫" },
     { href: "/organizer/judges", label: "JUDGES", icon: "◉" },
     { href: "/organizer/judging", label: "JUDGING", icon: "▣" },
@@ -16,7 +17,15 @@ const NAV = [
     { href: "/organizer/export", label: "EXPORT", icon: "↗" },
 ];
 
-export default function OrganizerNav({ user }: { user: { email: string; firstName: string | null } }) {
+const ADMIN_NAV = { href: "/organizer/admins", label: "ADMINS", icon: "◆" };
+
+export default function OrganizerNav({
+    user,
+    isHeadAdmin,
+}: {
+    user: { email: string; firstName: string | null };
+    isHeadAdmin: boolean;
+}) {
     const pathname = usePathname();
     const router = useRouter();
 
@@ -45,6 +54,22 @@ export default function OrganizerNav({ user }: { user: { email: string; firstNam
                         </Link>
                     );
                 })}
+
+                {isHeadAdmin && (() => {
+                    const active = pathname === ADMIN_NAV.href || pathname.startsWith(ADMIN_NAV.href);
+                    return (
+                        <>
+                            <div className="my-2 border-t border-outline-variant/10" />
+                            <Link href={ADMIN_NAV.href}>
+                                <motion.div whileHover={{ x: 4 }}
+                                    className={`flex items-center gap-3 px-4 py-2.5 font-mono text-xs tracking-widest uppercase transition-colors ${active ? "text-[#39FF14] border-l-2 border-[#39FF14] bg-[#39FF14]/5" : "text-[#39FF14]/50 hover:text-[#39FF14] border-l-2 border-transparent"}`}
+                                >
+                                    <span>{ADMIN_NAV.icon}</span>{ADMIN_NAV.label}
+                                </motion.div>
+                            </Link>
+                        </>
+                    );
+                })()}
             </div>
 
             <div className="p-4 border-t border-outline-variant/10">

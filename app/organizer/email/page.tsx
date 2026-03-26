@@ -56,7 +56,7 @@ export default function MassEmailPage() {
         <div className="space-y-8">
             <div>
                 <h1 className="text-4xl font-black italic tracking-tighter uppercase mb-1">MASS_EMAIL</h1>
-                <div className="font-mono text-xs text-on-surface-variant">Send emails to groups of participants via Resend</div>
+                <div className="font-mono text-xs text-on-surface-variant">Send emails to groups of participants</div>
             </div>
 
             {result && <div className="p-4 border-l-4 border-[#39FF14] bg-[#39FF14]/5 font-mono text-sm text-[#39FF14]">✓ Sent to {result.count} recipients</div>}

@@ -1,36 +1,150 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Framework 2027 Site
 
-## Getting Started
+Framework 2027 Site is the website and operations platform for `Framework 2027`, a same-day software hackathon run by PHHS Hack Club for Bergen County students. It combines a public-facing event site with role-based dashboards for hackers, judges, and organizers.
 
-First, run the development server:
+This is not just a landing page. The app also handles applications, check-in, team and project submission, judging workflows, organizer communications, and ceremony exports.
+
+## What The App Does
+
+- Public marketing site with event overview, schedule, FAQ, location, and contact form
+- Hacker accounts with email verification, application submission, team management, and project submission
+- Judge accounts with assignment queues and scoring flows
+- Organizer dashboard for reviewing applications, managing judges and members, running check-in, configuring the event, sending email, and exporting PowerPoint decks
+- File uploads for school ID verification
+
+## Tech Stack
+
+- `Next.js 16` with the App Router
+- `React 19` and `TypeScript`
+- `Tailwind CSS 4` for styling
+- `Prisma 7` with PostgreSQL via `@prisma/adapter-pg`
+- Custom JWT session auth stored in HTTP-only cookies
+- `bcryptjs` for password hashing
+- `nodemailer` for verification, reset, organizer, and contact email
+- MinIO / S3-compatible object storage for uploaded files
+- `PptxGenJS` for organizer export decks
+- `Framer Motion`, `GSAP`, `Lenis`, `Three.js`, and `Leaflet` for the frontend experience
+- `PM2` for the production process defined in [`ecosystem.config.js`](./ecosystem.config.js)
+
+## Core Product Areas
+
+### Public Site
+
+The homepage in [`app/page.tsx`](./app/page.tsx) is built from reusable sections in [`app/components`](./app/components). It presents the event identity, rules, schedule, FAQ, venue info, and contact flow.
+
+### Hacker Flow
+
+Hackers can:
+
+- sign up and verify email
+- submit an application
+- upload school ID proof
+- create or join a team
+- submit and edit a project once organizers open the project flow
+
+Key pages live under [`app/hacker`](./app/hacker).
+
+### Judge Flow
+
+Judges receive project assignments and submit scores against active judging rounds. The main UI is under [`app/judge`](./app/judge), backed by APIs in [`app/api/judge`](./app/api/judge).
+
+### Organizer Flow
+
+Organizers can:
+
+- review and update application decisions
+- manage members, judges, and admins
+- manage schedule items and awards
+- control theme release and project submission state
+- assign judging rounds
+- send bulk email
+- export ceremony and score decks as `.pptx`
+
+Organizer pages live under [`app/organizer`](./app/organizer).
+
+## Data Model
+
+The Prisma schema in [`prisma/schema.prisma`](./prisma/schema.prisma) models:
+
+- users, sessions, and roles
+- applications and review status
+- teams and team membership
+- projects
+- event config
+- judging rounds, assignments, and scores
+- awards and winners
+- schedule events
+- email logs
+
+## Environment
+
+Copy [`.env.example`](./.env.example) to `.env` and fill in the required values.
+
+Important variables:
+
+- `DATABASE_URL`
+- `APP_URL`
+- `JWT_SECRET`
+- `SMTP_*`
+- `CONTACT_EMAIL_TO`
+- `MINIO_*`
+
+## Local Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Start PostgreSQL locally:
+
+```bash
+docker compose up -d
+```
+
+3. Create `.env` from `.env.example` and update values as needed.
+
+If you use the bundled [`docker-compose.yml`](./docker-compose.yml), make sure `DATABASE_URL` points at port `5432`. The sample env file currently uses a different port.
+
+4. Run Prisma migrations:
+
+```bash
+npm run db:migrate
+```
+
+5. Optionally seed the database:
+
+```bash
+npm run seed
+```
+
+6. Start the dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app is configured around `http://localhost:2027` in the example env file, so keep `APP_URL` aligned with however you run it locally.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - start Next.js in development
+- `npm run build` - build the app, then restart the PM2 process
+- `npm run start` - run the production server directly
+- `npm run lint` - run ESLint
+- `npm run db:migrate` - run Prisma dev migrations
+- `npm run db:studio` - open Prisma Studio
+- `npm run seed` - seed the database
 
-## Learn More
+## Deployment Notes
 
-To learn more about Next.js, take a look at the following resources:
+- Production process settings live in [`ecosystem.config.js`](./ecosystem.config.js)
+- The PM2 app runs `next start -p 2027`
+- PostgreSQL can be brought up locally with [`docker-compose.yml`](./docker-compose.yml)
+- Uploaded files expect an S3-compatible backend such as MinIO
+- Email features require valid SMTP credentials
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Additional Docs
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Plain-English project summary: [`project-desc.md`](./project-desc.md)

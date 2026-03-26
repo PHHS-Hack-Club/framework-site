@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { fadeUpLarge as fadeUp, stagger } from "@/app/lib/animations";
+import { fadeUpLarge as fadeUp, slideFromLeft, slideFromRight, stagger } from "@/app/lib/animations";
 
 type ContactState = {
     name: string;
@@ -84,33 +84,41 @@ export default function ContactSection() {
                 animate={inView ? "show" : "hidden"}
                 className="relative z-10 mx-auto grid max-w-6xl gap-14 lg:grid-cols-[0.95fr_1.05fr]"
             >
-                <div className="space-y-8">
+                {/* Left content — slides from left */}
+                <motion.div variants={slideFromLeft} className="space-y-8">
                     <motion.p
-                        variants={fadeUp}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={inView ? { opacity: 1, x: 0 } : {}}
+                        transition={{ delay: 0.1, duration: 0.6 }}
                         className="font-mono text-xs uppercase tracking-[0.35em] text-[#39FF14]"
                     >
                         contact uplink
                     </motion.p>
                     <motion.h2
-                        variants={fadeUp}
+                        initial={{ opacity: 0, x: -40 }}
+                        animate={inView ? { opacity: 1, x: 0 } : {}}
+                        transition={{ delay: 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                         className="max-w-xl text-5xl font-black uppercase tracking-tight md:text-7xl"
                     >
                         SEND_A_SIGNAL.
                     </motion.h2>
                     <motion.p
-                        variants={fadeUp}
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={inView ? { opacity: 1, x: 0 } : {}}
+                        transition={{ delay: 0.35, duration: 0.6 }}
                         className="max-w-lg font-mono text-sm leading-7 text-on-surface-variant"
                     >
-                        Questions, sponsorship, logistics, judge interest, venue access, or anything
-                        else that needs a human. This form routes directly to the organizers.
+                        Questions, sponsorship, judge interest, or anything else. Straight to the organizers.
                     </motion.p>
 
                     <motion.div
-                        variants={fadeUp}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={inView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ delay: 0.5, duration: 0.6 }}
                         className="grid gap-4 border border-[#39FF14]/15 bg-black/30 p-5 font-mono text-xs uppercase tracking-[0.22em] text-on-surface-variant md:grid-cols-2"
                     >
                         <motion.div
-                            whileHover={{ y: -4, borderColor: "rgba(57,255,20,0.3)" }}
+                            whileHover={{ y: -4, borderColor: "rgba(57,255,20,0.3)", boxShadow: "0 4px 20px rgba(57,255,20,0.08)" }}
                             className="border border-[#39FF14]/10 bg-[#111211] p-4"
                         >
                             <div className="mb-2 text-[#39FF14]">Primary Inbox</div>
@@ -119,7 +127,7 @@ export default function ContactSection() {
                             </div>
                         </motion.div>
                         <motion.div
-                            whileHover={{ y: -4, borderColor: "rgba(57,255,20,0.3)" }}
+                            whileHover={{ y: -4, borderColor: "rgba(57,255,20,0.3)", boxShadow: "0 4px 20px rgba(57,255,20,0.08)" }}
                             className="border border-[#39FF14]/10 bg-[#111211] p-4"
                         >
                             <div className="mb-2 text-[#39FF14]">Backup Copy</div>
@@ -128,16 +136,22 @@ export default function ContactSection() {
                             </div>
                         </motion.div>
                     </motion.div>
-                </div>
+                </motion.div>
 
+                {/* Form — slides from right */}
                 <motion.form
-                    variants={fadeUp}
+                    variants={slideFromRight}
                     onSubmit={onSubmit}
                     whileHover={{ y: -4 }}
-                    className="panel-sheen space-y-5 border border-[#39FF14]/15 bg-[#101110]/90 p-6 shadow-[0_0_60px_rgba(57,255,20,0.08)] backdrop-blur"
+                    className="space-y-5 border border-[#39FF14]/15 bg-[#101110]/90 p-6 shadow-[0_0_60px_rgba(57,255,20,0.08)] backdrop-blur"
                 >
                     <div className="grid gap-5 md:grid-cols-2">
-                        <label className="flex flex-col gap-2">
+                        <motion.label
+                            className="flex flex-col gap-2"
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={inView ? { opacity: 1, y: 0 } : {}}
+                            transition={{ delay: 0.4 }}
+                        >
                             <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-on-surface-variant">
                                 Name
                             </span>
@@ -145,10 +159,15 @@ export default function ContactSection() {
                                 required
                                 value={form.name}
                                 onChange={(event) => updateField("name", event.target.value)}
-                                className="border border-[#39FF14]/15 bg-[#080908] px-4 py-3 text-sm text-on-surface outline-none transition focus:border-[#39FF14]"
+                                className="border border-[#39FF14]/15 bg-[#080908] px-4 py-3 text-sm text-on-surface outline-none transition-all duration-300 focus:border-[#39FF14] focus:shadow-[0_0_20px_rgba(57,255,20,0.1)]"
                             />
-                        </label>
-                        <label className="flex flex-col gap-2">
+                        </motion.label>
+                        <motion.label
+                            className="flex flex-col gap-2"
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={inView ? { opacity: 1, y: 0 } : {}}
+                            transition={{ delay: 0.5 }}
+                        >
                             <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-on-surface-variant">
                                 Email
                             </span>
@@ -157,12 +176,17 @@ export default function ContactSection() {
                                 type="email"
                                 value={form.email}
                                 onChange={(event) => updateField("email", event.target.value)}
-                                className="border border-[#39FF14]/15 bg-[#080908] px-4 py-3 text-sm text-on-surface outline-none transition focus:border-[#39FF14]"
+                                className="border border-[#39FF14]/15 bg-[#080908] px-4 py-3 text-sm text-on-surface outline-none transition-all duration-300 focus:border-[#39FF14] focus:shadow-[0_0_20px_rgba(57,255,20,0.1)]"
                             />
-                        </label>
+                        </motion.label>
                     </div>
 
-                    <label className="flex flex-col gap-2">
+                    <motion.label
+                        className="flex flex-col gap-2"
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={inView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ delay: 0.6 }}
+                    >
                         <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-on-surface-variant">
                             Subject
                         </span>
@@ -170,11 +194,16 @@ export default function ContactSection() {
                             required
                             value={form.subject}
                             onChange={(event) => updateField("subject", event.target.value)}
-                            className="border border-[#39FF14]/15 bg-[#080908] px-4 py-3 text-sm text-on-surface outline-none transition focus:border-[#39FF14]"
+                            className="border border-[#39FF14]/15 bg-[#080908] px-4 py-3 text-sm text-on-surface outline-none transition-all duration-300 focus:border-[#39FF14] focus:shadow-[0_0_20px_rgba(57,255,20,0.1)]"
                         />
-                    </label>
+                    </motion.label>
 
-                    <label className="flex flex-col gap-2">
+                    <motion.label
+                        className="flex flex-col gap-2"
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={inView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ delay: 0.7 }}
+                    >
                         <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-on-surface-variant">
                             Message
                         </span>
@@ -183,18 +212,25 @@ export default function ContactSection() {
                             rows={7}
                             value={form.message}
                             onChange={(event) => updateField("message", event.target.value)}
-                            className="resize-y border border-[#39FF14]/15 bg-[#080908] px-4 py-3 text-sm leading-7 text-on-surface outline-none transition focus:border-[#39FF14]"
+                            className="resize-y border border-[#39FF14]/15 bg-[#080908] px-4 py-3 text-sm leading-7 text-on-surface outline-none transition-all duration-300 focus:border-[#39FF14] focus:shadow-[0_0_20px_rgba(57,255,20,0.1)]"
                         />
-                    </label>
+                    </motion.label>
 
-                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                        <button
+                    <motion.div
+                        className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={inView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ delay: 0.8 }}
+                    >
+                        <motion.button
                             type="submit"
                             disabled={status === "submitting"}
-                            className="bg-[#39FF14] px-8 py-4 font-mono text-xs font-bold uppercase tracking-[0.28em] text-[#053900] transition hover:-translate-y-0.5 hover:shadow-[0_0_40px_rgba(57,255,20,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
+                            whileHover={{ y: -3, boxShadow: "0 0 50px rgba(57,255,20,0.4)" }}
+                            whileTap={{ scale: 0.97 }}
+                            className="bg-[#39FF14] px-8 py-4 font-mono text-xs font-bold uppercase tracking-[0.28em] text-[#053900] transition disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {status === "submitting" ? "TRANSMITTING..." : "SEND_MESSAGE"}
-                        </button>
+                        </motion.button>
 
                         <div
                             className={`font-mono text-xs uppercase tracking-[0.2em] ${
@@ -203,7 +239,7 @@ export default function ContactSection() {
                         >
                             {message || "Replies go back to the email you enter above."}
                         </div>
-                    </div>
+                    </motion.div>
                 </motion.form>
             </motion.div>
         </section>

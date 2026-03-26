@@ -1,4 +1,5 @@
 import packageJson from "@/package.json";
+import type { Role } from "@prisma/client";
 
 const COMMIT_SHA =
     process.env.VERCEL_GIT_COMMIT_SHA ??
@@ -13,6 +14,12 @@ export function normalizeEmail(email: string) {
 
 export function isAdminEmail(email: string) {
     return ADMIN_EMAILS.has(normalizeEmail(email));
+}
+
+export function getDashboardHref(role: Role | string) {
+    if (role === "ORGANIZER") return "/organizer";
+    if (role === "JUDGE") return "/judge";
+    return "/hacker";
 }
 
 export const BUILD_ID = COMMIT_SHA
